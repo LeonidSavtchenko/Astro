@@ -1,0 +1,74 @@
+objref trajectories_tvec    // vector of doubles
+objref trajectories_name    // list of strings
+objref trajectories_vvec    // list of vectors of doubles
+trajectories_name = new List()
+trajectories_vvec = new List()
+
+// $o1 - (list of strings)   the name of section array where the watched variable resides, e.g. { "soma", "dendrite" }
+// $o2 - (vector of doubles) the index in the array, e.g. { 0, 3 }
+// $o3 - (list of strings)   the name of watched variable, e.g. { "cai", "v" }
+// $o4 - (vector of doubles) relative coordinate of the point where the variable will be watched, e.g. { 0.05, 0.7 }
+// $5  - (scalar)            the number of processes
+proc add_trajec() { local numProcs, numWatchedVars, watchedSecIdx, watchedVarCoord, i  localobj watchedSecNames, watchedSecIdxs, watchedVarNames, watchedVarCoords, watchedSecName, watchedVarName, tvec, name, vvec, tstr, command, file
+
+    watchedSecNames = $o1
+    watchedSecIdxs = $o2
+    watchedVarNames = $o3
+    watchedVarCoords = $o4
+    numProcs = $5
+    
+    numWatchedVars = watchedSecNames.count
+    
+    tvec = new Vector()
+    tvec.record(&t)
+    trajectories_tvec = tvec
+        
+    for i = 0, numWatchedVars - 1 {
+
+        watchedSecName = watchedSecNames.object[i]
+        watchedSecIdx = watchedSecIdxs.x[i]
+        
+        if (!section_exists(watchedSecName.s, watchedSecIdx)) {
+            // The specified section does not live on this process
+            continue
+        }
+        
+        watchedVarName = watchedVarNames.object[i]
+        watchedVarCoord = watchedVarCoords.x[i]
+        
+        name = new String(watchedSecName.s)
+        sprint(name.s, "%s[%d]", watchedSecName.s, watchedSecIdx)
+        
+        push_section(name.s)
+        
+        vvec = new Vector()
+        
+        // Prepare and execute the command that binds the watched parameter to the watcher
+        command = new String(" ")
+        sprint(command.s, "proc add_record() { $o1.record(&%s(%g)) }", watchedVarName.s, watchedVarCoord)
+        execute1(command.s)
+        add_record(vvec)
+        
+        pop_section()
+        
+        sprint(name.s, "trajec_%s[%d].%s(%g)_for_%d_procs.dat", watchedSecName.s, watchedSecIdx, watchedVarName.s, watchedVarCoord, numProcs)
+        
+        trajectories_name.append(name)
+        trajectories_vvec.append(vvec)
+    }
+}
+
+proc print_trajec() { local i, j  localobj f, name, tvec, vvec
+    tvec = trajectories_tvec
+    for i = 0, trajectories_name.count - 1 {
+        name = trajectories_name.object(i)
+        vvec = trajectories_vvec.object(i)
+        f = new File()
+        f.wopen(name.s)
+        for j = 0, tvec.size-1 {
+            f.printf("%g %g\n", tvec.x[j], vvec.x[j])
+        }
+        f.close()
+    }
+}
+

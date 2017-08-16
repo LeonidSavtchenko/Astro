@@ -1,0 +1,56 @@
+load_file("mview.hoc")
+mview()
+objref rclist, shape, sl, g, g2, nsvec, svec, cpu, cpux, cxvec, b
+rclist = new List("ModelViewRealCell")
+shape = new Shape()
+g = new Graph()
+g2 = new Graph()
+shape.exec_menu("Show Diam")
+nsvec = new Vector()
+cxvec = new Vector()
+b = new LoadBalance()
+read_mcomplex(b)
+for i=0, rclist.count - 1 {
+    ns=0
+    sl = new SectionList()
+    for rclist.object(i).sections() {
+        if (ns == 0) {
+            cxvec.append(b.cell_complexity())
+            if (i > 0) {
+                if (n3d() != 0) {
+                    shape.mark(x3d(0), y3d(0), "O", 8, 1, 1)
+                }
+            } else {
+                shape.mark(x3d(n3d()/2), y3d(n3d()/2), "O", 8, 1, 1)
+            }
+        }
+        sl.append()
+        ns += nseg
+    }
+    nsvec.append(ns)
+    // shape.color_list(sl,(i%7) + 1)
+    shape.color_list(sl, 9)
+    print i, rclist.object(i).root, "  ", ns
+}
+nsvec = cxvec
+svec = nsvec.sortindex().reverse
+for i=0, nsvec.size-1 {
+    g.mark(i+1, nsvec.x[svec.x[i]], "O", 8, 1, 1)//(svec.x[i]%7)+1, 1)
+}
+g.size(0,rclist.count,0,nsvec.max)
+cpux = new Vector(split)
+cpu = new Vector(nsvec.size)
+cpu.fill(-1)
+for i=0, nsvec.size-1 {
+    j = cpux.min_ind()
+    cpux.x[j] += nsvec.x[svec.x[i]]
+    cpu.x[i] = j
+    g2.mark(j+1, cpux.x[j], "-", 10, 1, 1)//(svec.x[i]%7)+1,1)
+    if (i < cpux.size*3) {
+        sprint(tstr, "%d", i+1)
+        g2.label(j+1, cpux.x[j], tstr, 1, 1, .5, 1, 1)
+    }
+}
+g2.size(0,split,0,cpux.max)
+cpux.printf
+print "balance ", cpux.max/cpux.mean

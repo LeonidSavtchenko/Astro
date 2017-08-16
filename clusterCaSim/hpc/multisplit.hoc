@@ -1,0 +1,135 @@
+{load_file("loadbal.hoc")}
+{load_file("binfo.hoc")}
+
+if (name_declared("maxfactor") == 0) {execute("maxfactor = .3")}
+
+proc multisplit() { local c, cm  localobj b, ms, vs, bi, cb, nc, nil
+    // print "    >>>> LABEL -- multisplit.hoc -- multisplit() -- 1"
+    b = new LoadBalance()
+    read_mcomplex(b)
+    // print "    >>>> LABEL -- multisplit.hoc -- multisplit() -- 2"
+    if (split > 1 || pc.nhost > 1) {
+        ms = new Vector(100)
+        if (pc.id == 0) {
+            c = b.cell_complexity()
+            cm = c * maxfactor / pc.nhost
+            // print "c = ", c, "  maxfactor = ", maxfactor, "  cm = ", cm
+            // print "    >>>> LABEL -- multisplit.hoc -- multisplit() -- 3"
+            b.multisplit(0, cm, ms)
+            // print "    >>>> LABEL -- multisplit.hoc -- multisplit() -- 4"
+            // bprint(ms)
+        }
+        // print "    >>>> LABEL -- multisplit.hoc -- multisplit() -- 5"
+        pc.broadcast(ms, 0)
+        vs = new VectorStream(ms)
+        bi = new BalanceInfo()
+        // print "    >>>> LABEL -- multisplit.hoc -- multisplit() -- 6"
+        bi.msgid = 1e6
+        bi.nhost = pc.nhost
+        bi.ihost = pc.id
+        // print "    >>>> LABEL -- multisplit.hoc -- multisplit() -- 7"
+        bi.bilist.append(new CellBalanceInfo(vs))
+        // print "    >>>> LABEL -- multisplit.hoc -- multisplit() -- 8"
+        bi.mymetis2(pc.nhost)
+        // print "    >>>> LABEL -- multisplit.hoc -- multisplit() -- 9"
+        if (pc.id == 0) { bi.stat() }
+        cb = bi.bilist.object(0)
+        // print "    >>>> LABEL -- multisplit.hoc -- multisplit() -- 10"
+        nc = new NetCon(&v(.5), nil)
+        // print "    >>>> LABEL -- multisplit.hoc -- multisplit() -- 11"
+        cb.multisplit(nc, 100, pc, pc.id)
+    }
+    // printf("%d cpu complexity %g\n", pc.id, b.cpu_complexity())
+    cplx = b.cpu_complexity()
+    // print "    >>>> LABEL -- multisplit.hoc -- multisplit() -- 12"
+}
+
+// make sure mcomplex.dat exists
+proc chk_mcomplex() { localobj f
+    // print "    >>>> LABEL -- multisplit.hoc -- chk_mcomplex() -- 1"
+    if (pc.id == 0) {
+        f = new File("mcomplex.dat")
+        if (f.ropen()) {
+            f.close()
+        } else {
+            // print "    >>>> LABEL -- multisplit.hoc -- chk_mcomplex() -- 2"
+            mcomplex()
+            // print "    >>>> LABEL -- multisplit.hoc -- chk_mcomplex() -- 3"
+        }
+    }
+    // print "    >>>> LABEL -- multisplit.hoc -- chk_mcomplex() -- 4"
+    pc.barrier()
+    // print "    >>>> LABEL -- multisplit.hoc -- chk_mcomplex() -- 5"
+}        
+
+proc bprint() { local i, i1, i2, i3, n1, n2, n3, np
+    np = 0
+    i = -1
+    printf("%d %g", $o1.x[i+=1], $o1.x[i+=1])
+    n1 = $o1.x[i+=1] printf(" %d\n", n1)
+    for i1 = 0, n1 - 1 {
+        n2 = $o1.x[i+=1]
+        np += n2
+        printf("  %d\n", n2)
+        for i2 = 0, n2 - 1 {
+            printf("    %g", $o1.x[i+=1])
+            n3 = $o1.x[i+=1]
+            printf(" %d\n     ", n3)
+            for i3=0, n3 - 1 {
+                printf(" %d", $o1.x[i+=1])
+            }
+            printf("\n")
+        }
+    }
+    printf(" %d pieces\n", np)
+}
+
+proc mcomplex() { local i, j localobj f, lb, mt, s
+    // print "    >>>> LABEL -- multisplit.hoc -- mcomplex() -- 1"
+    lb = new LoadBalance()
+    // print "    >>>> LABEL -- multisplit.hoc -- mcomplex() -- 2"
+    lb.ExperimentalMechComplex()
+    // print "    >>>> LABEL -- multisplit.hoc -- mcomplex() -- 3"
+    f = new File()
+    f.wopen("mcomplex.dat")
+    for j=0, 1 {
+        s = new String()
+        mt = new MechanismType(j)
+        for i=0, mt.count-1 {
+            mt.select(i)
+            mt.selected(s.s)
+            f.printf("%g %s\n", lb.m_complex_[j].x[i], s.s)
+        }
+    }
+    f.close
+}
+
+proc read_mcomplex() { local i, j, k localobj f, lb, mt, s, s2
+    lb = $o1
+    f = new File()
+    if (!f.ropen("mcomplex.dat")) {
+        return
+    }
+    for j=0, 1 {
+        k = 0
+        s = new String()
+        s2 = new String()
+        mt = new MechanismType(j)
+        for i=0, mt.count-1 {
+            lb.m_complex_[j]
+            c = f.scanvar()
+            f.scanstr(s2.s)
+            mt.select(i)
+            mt.selected(s.s)
+            if (pc.id == 0) {
+                if (strcmp(s.s, s2.s) != 0) {
+                    execerror(s2.s, " not loaded")
+                }
+            }
+            lb.m_complex_[j].x[k] = c
+            k += 1
+        }
+    }
+    f.close
+
+}

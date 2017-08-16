@@ -1,0 +1,69 @@
+
+objref tdat_   
+tdat_ = new Vector(7)
+
+proc statrun() {
+    tdat_.x[0] = pnm.pc.wait_time
+    stdinit()
+    pnm.psolve($1)
+    tdat_.x[0] = pnm.pc.wait_time - tdat_.x[0]
+    tdat_.x[1] = pnm.pc.step_time
+    tdat_.x[2] = pnm.pc.send_time
+    tdat_.x[3] = pc.vtransfer_time(0) // for gaps
+    tdat_.x[4] = pc.vtransfer_time(1) // for splitcell communication
+    tdat_.x[5] = pc.vtransfer_time(2) // for reduced tree
+    tdat_.x[6] = cplx
+}
+
+objref tavg_stat, tmin_stat, tmax_stat, idmin_stat, idmax_stat
+proc poststat() {
+    pnm.pc.post("poststat", pnm.myid, tdat_)
+}
+proc getstat() {local i, j, id localobj tdat
+    tdat = tdat_.c    tavg_stat = tdat_.c  tmin_stat = tdat_.c  tmax_stat = tdat_.c
+    idmin_stat = tdat_.c.fill(0)  idmax_stat = tdat_.c.fill(0)
+    if (pnm.nwork > 1) {
+        pnm.pc.context("poststat()\n")
+        for i=0, pnm.nwork-2 {
+            pnm.pc.take("poststat", &id, tdat)
+            tavg_stat.add(tdat)
+            for j = 0, tdat_.size-1 {
+                if (tdat.x[j] > tmax_stat.x[j]) {
+                    idmax_stat.x[j] = id
+                    tmax_stat.x[j] = tdat.x[j]
+                }
+                if (tdat.x[j] < tmin_stat.x[j]) {
+                    idmin_stat.x[j] = id
+                    tmin_stat.x[j] = tdat.x[j]
+                }
+            }
+        }
+    }
+    tavg_stat.div(pnm.nhost)
+}
+
+objref spstat_
+proc postspstat() { local i
+    spstat_ = new Vector()
+    cvode.spike_stat(spstat_)
+    i = spstat_.size
+    spstat_.resize(spstat_.size + 4)
+    spstat_.x[i] = pc.spike_statistics(&spstat_.x[i+1], &spstat_.x[i+2],\
+        &spstat_.x[i+3])
+    pnm.pc.post("postspstat", pnm.myid, spstat_)
+}
+
+proc perf2file() { local i  localobj perf
+    perf = new File()
+    perf.aopen("perf.dat")
+    model = 0
+    perf.printf("%d %d 0 %g     %g %g     ", pnm.nhost, model, maxfactor, setuptime, runtime)
+    for i=0, tdat_.size-1 { perf.printf(" %g", tavg_stat.x[i]) }
+    perf.printf("     ")
+    for i=0, tdat_.size-1 { perf.printf(" %d %g ", idmin_stat.x[i], tmin_stat.x[i]) }
+    perf.printf("     ")
+    for i=0, tdat_.size-1 { perf.printf(" %d %g ", idmax_stat.x[i], tmax_stat.x[i]) }
+    perf.printf("\n")
+
+    perf.close
+}

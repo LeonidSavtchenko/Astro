@@ -1,0 +1,25 @@
+
+
+
+
+proc advance() { local ii
+
+fadvance()
+
+ if ((t > TimeDelayCaWave ) && (t < TimeDelayCaWave + DurationIP3iCalciumWave )) {
+ for ii=1, OriginalDendrite { 	
+	dendrite[ii].ip3i=InitIp3
+ }
+
+ soma[0].ip3i=InitIp3 
+
+} else {
+for ii=1, OriginalDendrite { 	
+	dendrite[ii].ip3i=0.0000001
+ }
+
+ soma[0].ip3i=0.0000001		
+	
+}
+}
+

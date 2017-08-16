@@ -1,0 +1,25 @@
+proc printtopology() {
+    pc.barrier()
+    print "##############################"
+    pc.barrier()
+    for i = 0, pc.nhost - 1 {
+        if (pc.id == i) {
+            print "----- Process ", i, " -----"
+            
+            print "Section infos:"
+            forall {
+                // print secname()
+                { print psection() }
+            }
+            
+            { print "Topology:" }
+            { topology() }
+        }
+        pc.barrier()
+    }
+    pc.barrier()
+    print "##############################"
+    pc.barrier()
+}
+
+printtopology()

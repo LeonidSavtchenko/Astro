@@ -1,0 +1,99 @@
+load_file("nrngui.hoc")
+
+
+objref input,  NetInput
+NumberLeaves=12 // Number of leaves per stalk
+//objref gsec[1000000] // NUmber of sections
+NumberListSoma=0
+
+// SizeTotal is a total number of geometrical objects
+SizeTotal=NumberDendrites*NumberLeaves+1+NumberListSoma*NumberLeaves
+//**********************************
+
+//objref  Surf[SizeTotal]         	//declare object references
+
+
+// This part defines the topology of Astrocyte
+//**************************************************************************************
+// create leaves and stalks
+create LargeGlia[SizeTotal]
+create SmallGlia[SizeTotal]
+connect LargeGlia[0](0), dendrite[0](1)
+
+for i = 0, 9 {
+    connect SmallGlia[i](0), LargeGlia[i](1)
+    connect LargeGlia[i+1](0), SmallGlia[i](1)
+}
+
+for i= 1, NumberDendrites-1 { // NumberDendrites is a Number in the file  of  3D reconstruction
+//print i
+    connect LargeGlia[NumberLeaves*i+1](0), dendrite[i](1)
+}
+
+for i = NumberLeaves+1, NumberLeaves+11 { //19
+    for j= 0, NumberDendrites-2 {
+        connect SmallGlia[NumberLeaves*j+i](0), LargeGlia[NumberLeaves*j+i](1)
+        connect LargeGlia[NumberLeaves*j+i+1](0), SmallGlia[NumberLeaves*j+i](1)
+    }
+}
+//**************************** end of Topology **********************************************************
+
+objref prob
+prob = new Random()
+
+// The procedure determines the geometry and biophysical properties of leaves
+proc Leaves() { local SurfaceLeaves, VolumeLeaves
+// All density function of membrane kinetic  must be multiply by 1+D/2L to take into account the lateral surface 
+SurfaceLeaves=0
+VolumeLeaves = 0 
+for i = 0, SizeTotal-1 LargeGlia[i] {
+       dim2 = prob.uniform($2, $1)
+	   length2=prob.uniform($4, $3)
+        nseg = 1
+        L    = length2 
+        diam = dim2
+	    Ra = 100  // Ohm cm 
+	    cm = 0.8  // uF/cm2
+	    insert pas
+	   insert cadifus
+	   ip3i=0.000001
+	    e_pas = -85  // mV
+	    g_pas = (1+dim2/(2*length2))*(1/11150)  // mho/cm2
+	    SurfaceLeaves=SurfaceLeaves + L*3.14*diam + 2*3.14*diam*diam/4 
+	    VolumeLeaves=VolumeLeaves+L*(3.14*diam*diam)/4
+	 
+}
+
+}
+
+// The procedure determines the geometry and biophysical properties of Stalks
+
+
+proc sma() { local surfaceStalks, volumeStalks
+surfaceStalks=0
+volumeStalks = 0 
+for i = 0, SizeTotal-1 SmallGlia[i] {
+    dim1 = prob.uniform($2, $1)
+	length1=prob.uniform($4, $3)
+    nseg = 1
+    L    = length1 
+    diam = dim1
+	Ra = 100 // Ohm cm
+	cm = 0.8 
+	insert pas
+	insert cadifus
+	ip3i=0.000001
+	e_pas = -85    // mV
+	g_pas = 1/11150  // mho/cm2
+	 surfaceStalks=surfaceStalks+length1*3.14*diam
+	 volumeStalks=volumeStalks+length1*(3.14*diam*diam)/4
+ }
+}
+
+//******************INIT *********************************************************************
+
+v_init=-85 // mV
+ip3i=0.0000001
+finitialize(v_init)
+
+//********************************************************************************************

@@ -1,0 +1,118 @@
+if (unix_mac_pc() != 1 && unix_mac_pc() != 3) {
+    print "Not supported OS"
+    quit()
+}
+
+{setuptime = startsw()}
+
+{load_file("nrngui.hoc")}
+
+// Input parameters
+{load_file("params.hoc")}
+
+if (!name_declared("numProcs")) { execute("numProcs = -1") }
+
+// normal run on 1 processor does not split
+// use -c split=1 to split if one processor
+// use -c split=n to stop after setup showing how the cell is split
+//   probably also want -c maxfactor = .3/n in that case
+if (!name_declared("split")) { execute("split = 0") }
+
+{load_file("netparmpi.hoc")}
+{load_file("trajec.hoc")}
+objref pc, pnm
+pnm = new ParallelNetManager(1) // 1 stands for "ncell"
+pc = pnm.pc
+{load_file("multisplit.hoc")}
+{load_file("perf.hoc")}
+
+// print "    >>>> LABEL -- init.hoc -- before chk_mcomplex()"
+
+chk_mcomplex()
+
+// print "    >>>> LABEL -- init.hoc -- after chk_mcomplex()"
+
+proc astro() {
+    // print "    >>>> LABEL -- init.hoc -- astro() -- 1"
+    load_file("model/init.hoc") 
+    tstop = timePeriod
+    dt = timeStep
+    // print "    >>>> LABEL -- init.hoc -- astro() -- 2"
+    multisplit()
+    load_file("model/CaDynamics.hoc")  
+    // print "    >>>> LABEL -- init.hoc -- astro() -- 3"
+    // Specify the parameter to watch
+    add_trajec(watchedSecNames, watchedSecIdxs, watchedVarNames, watchedVarCoords, numProcs)
+    // print "    >>>> LABEL -- init.hoc -- astro() -- 4"
+}
+
+astro()
+
+// print "    >>>> LABEL -- init.hoc -- before if (split > 1)"
+
+if (split > 1) {
+    load_file("pltsplit.hoc")
+    if (unix_mac_pc() == 1) {
+        // Unix
+        execerror("stop", "Setup complete")
+    } else if (unix_mac_pc() == 3) {
+        // Windows
+        print "Setup complete"
+        quit()
+    }
+} else {
+    // {load_file("printtopology.hoc")}
+    // printtopology()
+}
+
+// print "    >>>> LABEL -- init.hoc -- after if (split > 1)"
+
+// Save setup time to file
+// $1 - The number of processes.
+// $2 - Setup time.
+proc savesetuptime() { localobj str, strPat, file
+    str = new String(" ")
+    sprint(str.s, "setuptime_for_%d_procs.dat", $1)
+    file = new File()
+    file.wopen(str.s)
+    file.printf("%g", $2)
+    file.close()
+    
+    if (unix_mac_pc() == 1) {
+        // Unix
+        strPat = new String("mv %s results")
+    } else if (unix_mac_pc() == 3) {
+        // Windows
+        strPat = new String("move /Y %s results")
+    }
+    sprint(str.s, strPat.s, str.s)
+    system(str.s)
+}
+
+{pc.multisplit()}
+{pc.set_maxstep(100)}
+setuptime = startsw() - setuptime
+if (pc.id == 0) {
+    printf("setuptime = %g\n", setuptime)
+    savesetuptime(pc.nhost, setuptime)
+}
+
+proc dorun() {
+    runtime = startsw()
+    // print "    >>>> LABEL -- init.hoc -- dorun() -- 1"
+    statrun(tstop)
+    // print "    >>>> LABEL -- init.hoc -- dorun() -- 2"
+    runtime = startsw() - runtime
+    if (pc.id == 0) {
+        printf("runtime = %g\n", runtime)
+    }
+    print_trajec()
+    printf("%5d time %10g %10g %10g %5g\n", pc.id, pc.step_time(), pc.vtransfer_time(1), pc.vtransfer_time(2), cplx)
+    pc.runworker()
+    getstat()
+    pc.done()
+    perf2file()
+    quit()
+}
+
+dorun()

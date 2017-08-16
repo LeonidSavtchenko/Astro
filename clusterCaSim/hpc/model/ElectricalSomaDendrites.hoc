@@ -1,0 +1,64 @@
+objref VFSec[10000000]
+//GapJunctionMaxNumber=800
+
+
+
+ for i = 1, NumberDendrites-SeedNumber-1 {  dendrite[i] connect dendrite[i+SeedNumber](0), 1 //264
+  access dendrite[i+SeedNumber]
+ { L=0.1 diam=3 } // L and dim in um define the geometry of small seeds
+  pt3dclear()
+  }
+
+soma  {
+ 	Ra = 100               // Ohm cm
+	cm = 0.8               // uF/cm2
+    nseg = 10
+	insert pas
+	insert cadifus
+	ip3i=0.000001              // initial ip3 mM
+	e_pas = -85            // mV 
+	g_pas = 1/11150        // mS/cm2
+	
+    // Current progress reporter mechanism
+    insert reporter
+    period_reporter = reportPeriod
+}	
+   
+for i = 0, NumberDendrites-1 dendrite[i]  {
+	Ra = 100               // Ohm cm
+	cm = 0.8               // uF/cm2
+	nseg = 10
+	insert pas
+	insert cadifus	
+	DCa_cadifus=0.30       // um2/sm
+	ip3i=0.000001             // initial ip3 mM
+	e_pas = -85            // mV 
+	g_pas = 1/11150        // mS/cm2
+	
+  
+   
+ }
+  
+ objref ProbGeometry
+ 
+ proc stretch() { local ii, m, scaleNew
+  m = $1
+  scaleNew = $2
+ProbGeometry = new Random(m)
+iii=0
+    //forall for ii=0,n3d()-1 {
+	for i = 0, OriginalDendrite-2 dendrite[i] {
+	for ii=0,n3d()-1 {
+    //print ii
+    if ( x3d(ii) > 0.01 &&  y3d(ii) > 0.01) {
+    pt3dchange(ii, x3d(ii), y3d(ii), ProbGeometry.uniform(-1, 1)+z3d(ii), 1.67/sqrt(scaleNew*sqrt(x3d(ii)*x3d(ii)+y3d(ii)*y3d(ii))))
+	} else {
+	pt3dchange(ii, x3d(ii), y3d(ii), ProbGeometry.uniform(-1, 1)+z3d(ii), 1.67/sqrt(scaleNew*sqrt(x3d(ii)*x3d(ii)+1+y3d(ii)*y3d(ii))))
+	}
+	}
+  }
+}
+
+
+
+

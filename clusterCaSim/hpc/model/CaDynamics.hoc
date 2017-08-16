@@ -1,0 +1,101 @@
+objref NetInput1[TotalNUmberGapJunction+2]
+// ***********   Calcium stimulation sets*******************************************
+
+objref r, inputSt[TotalNUmberGapJunction+2],  StimTrigger[TotalNUmberGapJunction+2]
+r = new Random(Initseed)
+ 
+// $1 BasicStimulus, 
+// $2 Interval, 
+// $3 ECaresting,  
+// $4 Tau1St, 
+// $5 Tau2St, 
+// $6 NumberStim, 
+// $7 Noise1_NoNoise0, 
+// $8 NoiseCaBegin, 
+// $9 TotalNUmberGapJunction, 
+// $10 ActiveDendrite1, 
+// $11 ActiveDendrite2, 
+// $12 BasicCaFlux, 
+// $13 NoiseBasicInterval
+proc stimul()  { local AmplitudeOfCalcium, BasicCalciumNoise, i localobj dendrite10, dendrite11, dendriteI // Procedure of different stimulations 
+    dendrite10 = new String()
+    sprint(dendrite10.s, "dendrite[%d]", $10)
+    dendrite11 = new String()
+    sprint(dendrite11.s, "dendrite[%d]", $11)
+    dendriteI = new String()
+
+    Control = 1 
+    // AmplitudeOfCalcium = 20 // This amplitude generates maximum Calcium responses
+    AmplitudeOfCalcium = $12
+    for i = 1, $9+1 {  
+        inpdata= r.uniform(0, 1)
+        // print "input=", inpdata
+        if (Control ==1) {
+            forsec dendrite10.s inputSt[i]  = new GapCaSt(inpdata) 
+            StimTrigger[i] = new NetStim(inpdata) 
+            forsec dendrite10.s inputSt[$9+1]  = new GapCaSt(0.4) // 0.4 position on the dendrite
+            StimTrigger[$9+1] = new NetStim(0.4)                 // 0.4 position on the dendrite
+        } else {
+            forsec dendrite11.s inputSt[i]  = new GapCaSt(inpdata) 
+            StimTrigger[i] = new NetStim(inpdata) 
+            forsec dendrite11.s inputSt[$9]  = new GapCaSt(0.8) // 0.8 position on the dendrite
+            StimTrigger[$9] = new NetStim(0.8)                 // 0.8 position on the dendrite  
+        }
+        if (Control==1) {
+            Control = 2
+        } else {
+            Control = 1
+        }
+    }
+
+    Control = 1
+    NoiseInterval=$13
+    BasicCalciumNoise = $1   
+    // spontaneouse Ca entry. TotalNUmberGapJunction points of entry
+    for i = 1, $9-1 {
+        if (Control == 1) {
+            dendriteI.s = dendrite10.s
+            Control = 2
+        } else {
+            dendriteI.s = dendrite11.s
+            Control = 1
+        }
+        
+        inpdata= r.uniform(0, 1)
+        forsec dendriteI.s {
+            inputSt[i].ECa = $3
+            inputSt[i].tau1= $4 // ms rise time
+            inputSt[i].tau2= $5  // ms decay time
+        }
+        //Ca big signal in interval $8 and number $6 
+        StimTrigger[i].interval = $2
+        StimTrigger[i].start = i*$8+$8*(inpdata - 0.5)*2
+        StimTrigger[i].number = $6
+        StimTrigger[i].noise = $7
+        NetInput1[i] = new NetCon(StimTrigger[i], inputSt[i], 0, 0, BasicCalciumNoise)
+        
+        // Noise basic
+        StimTrigger[$9+1].interval = NoiseInterval //ms
+        StimTrigger[$9+1].start = 0      //0 ms
+        StimTrigger[$9+1].number =  9000000
+        StimTrigger[$9+1].noise = 1
+        forsec dendrite10.s {
+            inputSt[$9+1].tau1= 1 // ms rise time
+            inputSt[$9+1].tau2= 0.1  // ms decay time
+        }
+        NetInput1[$9+1] = new NetCon(StimTrigger[$9+1], inputSt[$9+1], 0, 0, BasicCalciumNoise*AmplitudeOfCalcium)    
+
+        StimTrigger[$9].interval = NoiseInterval
+        StimTrigger[$9].start = 0 // 0 ms
+        StimTrigger[$9].number = 9000000
+        StimTrigger[$9].noise = 1
+        forsec dendrite11.s {
+            inputSt[$9].tau1= 1 // ms rise time
+            inputSt[$9].tau2= 0.1  // ms decay time
+        }
+        NetInput1[$9] = new NetCon(StimTrigger[$9], inputSt[$9], 0, 0, BasicCalciumNoise*AmplitudeOfCalcium)        
+    }
+//**********************************  
+}
+
+stimul(BasicStimulus, Interval, ECaresting,  Tau1St, Tau2St, NumberStim, Noise1_NoNoise0, NoiseCaBegin, TotalNUmberGapJunction, ActiveDendrite1, ActiveDendrite2, BasicCaFlux, NoiseBasicInterval)
