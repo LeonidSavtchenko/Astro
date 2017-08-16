@@ -1,0 +1,62 @@
+load_file("nrngui.hoc")
+
+load_file("CellInit.hoc")
+load_file("CellUpdate.hoc")
+load_file("MechanismSwitch.hoc")
+load_file("MainUi.hoc")
+
+load_file("GeometricalParameters.hoc")
+load_file("Simulations/SimFrapInCircleGeometry.hoc")
+load_file("Simulations/SimFrapLine.hoc")
+load_file("Simulations/SimSpatialVoltageDistributions.hoc")
+load_file("Simulations/SimConstantElectricalSimulations.hoc")
+load_file("Simulations/SimFrequencyElectricalSimulation.hoc")
+load_file("Simulations/SimCalciumDynamics.hoc")
+load_file("Simulations/SimCalciumWave.hoc")
+load_file("Simulations/SimGlutamate.hoc")
+
+// Sets initial params.
+proc initParamsMain() {
+    GapResistance = 100000          // Megaohm
+    potential = -85                 // mV
+    res_gap(GapResistance, potential)
+
+    Z_coordinate = 10   // the stochastic parameter changes the Z-distribution of astrocytes branches 
+    ScalingDiam = 0.127 //  the parameter scales the diameter of the central dendrites
+    stretch(Z_coordinate, ScalingDiam)
+
+    // This parameter defines how fast calcium relaxes between neighbouring astrocytes.
+    // The larger value means a slower connection between astrocytes.
+    // TimeRelexCalcium = 100000       // ms
+    // insertGapJunc()
+    // CaGapFlux(TimeRelexCalcium)
+
+    InsertElectricMechanisms(1)
+
+    DensityGluTransporters = 1e12   // 1/um2
+    MaxDimLeaves = 2.5              // um
+    MinDimLeaves = 0.1              // um
+    MaxLenLeaves = 0.12             // um
+    MinLenLeaves = 0.1              // um
+    setLeaves(MaxDimLeaves, MinDimLeaves, MaxLenLeaves, MinLenLeaves, nanoDistrLoaded, DensityGluTransporters)
+    
+    MaxDimStalk = 0.1               // um
+    MinDimStalk = 0.1               // um
+    MaxLenStalk = 1                 // um
+    MinLenStalk = 0.9               // um
+    setStalks(MaxDimStalk, MinDimStalk, MaxLenStalk, MinLenStalk, nanoDistrLoaded, DensityGluTransporters)
+
+    dt = 1
+    steps_per_ms = 1
+    tstop = 10000
+    v_init = -85                    // mV
+    finitialize(v_init)
+}
+
+// Opens the main program window.
+proc runMain() {
+    initCell()
+    initParamsMain()
+    showRunPanel()
+    showMainUi()
+}

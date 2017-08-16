@@ -1,0 +1,102 @@
+// Calcium Gap Junctions
+objref gapsca[SizeTotal*2]
+// Random
+objref randomStretch
+objref randomLeavesDiameters
+randomLeavesDiameters = new Random()
+
+// Sets rresistance and potential to gaps.
+// $1 - Gap resistance
+// $2 - Potential
+proc res_gap() {
+    for i  = 2, NumberDendrites-2 {
+        gaps[i].r = $1
+        gaps[i].VoltageGap = $2
+    }
+}
+
+// Changes height distribution of dendrites.
+// $1 - Random seed
+// $2 - Scale factor
+proc stretch() { local i, j, scaleNew
+    scaleNew = $2
+    randomStretch = new Random($1)
+
+    for i = 0, OriginalDendrite-2 dendrite[i] {
+        for j = 0, n3d()-1 {
+            if ( x3d(j) > 0.01 &&  y3d(j) > 0.01) {
+                pt3dchange(j, x3d(j), y3d(j), randomStretch.uniform(-1, 1)+z3d(j), 1.67/sqrt(scaleNew*sqrt(x3d(j)^2+y3d(j)^2)))
+            } else {
+                pt3dchange(j, x3d(j), y3d(j), randomStretch.uniform(-1, 1)+z3d(j), 1.67/sqrt(scaleNew*sqrt(x3d(j)^2+1+y3d(j)^2)))
+            }
+        }
+    }
+}
+
+// Inserts GapCa to Leaves.
+// Calcium Gap Junctions are located  ONLY in Large Glia Leaves
+// Specific calcium current affects the membrane potential and the Calcium concentration
+// Connections via gap junctions located on the Leaves !!!! Could we do say here that these are connections between neighbouring leaves?
+// NOT USED
+proc insertGapJunc() { local i
+    for i = 0, SizeTotal-2 {
+        LargeGlia[i] gapsca[i] = new GapCa(0.5)
+        LargeGlia[i+1] gapsca[i+1] = new GapCa(0.5)
+    }
+}
+
+// Modifies the parameter of TimeRelex. The TimeRelex = infinity means the Gap is closed.
+// NOT USED
+proc CaGapFlux() {
+    for i = 0, SizeTotal-2 {
+        gapsca[i].TimeRelex = $1
+    }
+}
+
+// The procedure determines the geometry and biophysical properties of Leaves.
+// $1 - Max diameter for uniform distribution
+// $2 - Min diameter for uniform distribution
+// $3 - Max length for uniform distribution
+// $4 - Min length for uniform distribution
+// $5 - Boolean. 0 - uniform distribution for diameters. 1 - distribution from file.
+// $6 - DensityGluTransporters
+proc setLeaves() {
+    // All density function of membrane kinetic  must be multiply by 1+D/2L to take into account the lateral surface 
+    for i = 0, SizeTotal-1 LargeGlia[i] {
+        if ($5 == 0) {
+            diam = randomLeavesDiameters.uniform($2, $1)
+        } else {
+            diam = getDiameterFromDistr(diamDistrLeaves, diamStep)
+        }
+        
+        L = randomLeavesDiameters.uniform($4, $3)
+        g_pas = (1+diam/(2*L))*(1/11150)  // mho/cm2
+
+        if (currentMechanismSetup == 1) {
+            density_GluTrans=(1+diam/(2*L))*$6
+        }
+    }
+}
+
+// The procedure determines the geometry and biophysical properties of Stalks.
+// $1 - Max diameter for uniform distribution
+// $2 - Min diameter for uniform distribution
+// $3 - Max length for uniform distribution
+// $4 - Min length for uniform distribution
+// $5 - Boolean. 0 - uniform distribution for diameters. 1 - distribution from file.
+// $6 - DensityGluTransporters
+proc setStalks() {
+    for i = 0, SizeTotal-1 SmallGlia[i] {
+        if ($5 == 0) {
+            diam = randomLeavesDiameters.uniform($2, $1)
+        } else {
+            diam = getDiameterFromDistr(diamDistrStalks, diamStep)
+        }
+
+        L    = randomLeavesDiameters.uniform($4, $3)
+        
+        if (currentMechanismSetup == 1) {
+            density_GluTrans=$6
+        }
+    }
+}

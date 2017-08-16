@@ -1,0 +1,8 @@
+// Writes statistics to the file.
+proc advance() {
+    fadvance()
+    // Update plot view
+    graphDendrites.exec_menu("View = plot")
+    
+    fileCalciumTime.printf("%-6.5g\t%-6.5g\t%-6.5g\n", t, dendrite[ActiveDendrite1].cai(0.5), dendrite[ActiveDendrite2].cai(0.5))
+}

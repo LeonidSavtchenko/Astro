@@ -1,0 +1,218 @@
+// UI
+objref vBoxMainPanel, vBoxLeftPanel, vBoxCentralPanel, vBoxRightPanel, plotShapeMainV, graphMainSomaV
+// 0 - Uniform distribution selected, 1 - Distribution from file selected
+// Diameter distribution of leaves
+distrStatusLeaves = 0
+// Diameter distribution of stalks
+distrStatusStalks = 0
+
+// Change distribution of Leaves
+// $1 - Boolean. 0 - uniform distribution. 1 - distribution from file.
+proc distrSelectedLeaves() {
+    if (numarg() >= 1) {
+        distrStatusLeaves = $1
+    }
+    setLeaves(MaxDimLeaves, MinDimLeaves, MaxLenLeaves, MinLenLeaves, distrStatusLeaves, DensityGluTransporters)
+}
+
+// Change distribution of Stalks
+// $1 - Boolean. 0 - uniform distribution. 1 - distribution from file.
+proc distrSelectedStalks() {
+    if (numarg() >= 1) {
+        distrStatusStalks = $1
+    }
+    setStalks(MaxDimStalk, MinDimStalk, MaxLenStalk, MinLenStalk, distrStatusStalks, DensityGluTransporters)
+}
+
+// Runs selected simulation from UI.
+// $1 - Number of selected simulation
+proc SimulationSelected() {
+    if ($1 >= 1 && $1 <= 7 && currentMechanismSetup == 1) {
+        InsertGlutamateMechanisms(0)
+        InsertElectricMechanisms(1)
+        currentMechanismSetup = 0
+    } else if ($1 == 8 && currentMechanismSetup == 0) {
+        InsertElectricMechanisms(0)
+        InsertGlutamateMechanisms(1)
+        currentMechanismSetup = 1
+    }
+
+    // Update advance() proc and run
+    if ($1 == 1) {
+        load_file(1, "Simulations/AdvanceProcs/AdvDefault.hoc")
+        FrapCircle()
+    } else if ($1 == 2) {
+        load_file(1, "Simulations/AdvanceProcs/AdvFrapLine.hoc")
+        FrapLine()
+    } else if ($1 == 3) {
+        load_file(1, "Simulations/AdvanceProcs/AdvDefault.hoc")
+        SpatialVoltage()
+    } else if ($1 == 4) {
+        load_file(1, "Simulations/AdvanceProcs/AdvDefault.hoc")
+        ConstantStimulations()
+    } else if ($1 == 5) {        
+        load_file(1, "Simulations/AdvanceProcs/AdvDefault.hoc")
+        FrequencyStimulations()
+    } else if ($1 == 6) {
+        load_file(1, "Simulations/AdvanceProcs/AdvCalciumDynamics.hoc")
+        RunCaSimulation()
+    } else if ($1 == 7) {
+        load_file(1, "Simulations/AdvanceProcs/AdvCalciumWave.hoc")
+        CalciumWave()
+    } else if ($1 == 8) {
+        load_file(1, "Simulations/AdvanceProcs/AdvGlutamate.hoc")
+        RunAstroGlu()
+    }
+}
+
+// Shows main program UI.
+proc showMainUi() {
+    vBoxMainPanel = new HBox()
+    vBoxMainPanel.intercept(1)
+    {
+        // Left panel
+        vBoxLeftPanel = new VBox()
+        vBoxLeftPanel.intercept(1)
+        {
+            xpanel("Leaves Geometry")
+            xlabel("======================= Leaves Geometry =======================")
+            xlabel("This procedure determines the nano structures,")
+            xlabel("which are short and have large diameters.")
+            xlabel("There are the prototypes of the base dimensions of astrocyte nanostructures. ")
+            xlabel("-------------------------------------------------------------------------------------------------------------------------")
+            if (nanoDistrLoaded == 1) {
+                xradiobutton("Diameter distribution from file", "distrSelectedLeaves(1)", 1)
+                xradiobutton("Uniform diameter distribution between Min and Max", "distrSelectedLeaves(0)")
+            } else {
+                xlabel("Uniform diameter distribution between Min and Max")
+            }
+            xvalue("Max diameter of Leaves (um)","MaxDimLeaves", 1, "distrSelectedLeaves()", 0, 1)
+            xvalue("Min diameter of Leaves (um)","MinDimLeaves", 1, "distrSelectedLeaves()", 0, 1)
+            xlabel("-------------------------------------------------------------------------------------------------------------------------")
+            xlabel("Uniform length distribution between Min and Max")
+            xvalue("Max length of Leaves (um)","MaxLenLeaves", 1, "distrSelectedLeaves()", 0, 1)
+            xvalue("Min length of Leaves (um)","MinLenLeaves", 1, "distrSelectedLeaves()", 0, 1)
+            xlabel("=============================================================")
+            xpanel(0)
+
+            xpanel("Stalks Geometry")
+            xlabel("======================= Stalks Geometry =======================")
+            xlabel("These are transitional structures between the leaves.")
+            xlabel("They are long and have small diameters")
+            xlabel("-------------------------------------------------------------------------------------------------------------------------")
+            if (nanoDistrLoaded == 1) {
+                xradiobutton("Diameter distribution from file", "distrSelectedStalks(1)", 1)
+                xradiobutton("Uniform diameter distribution between Min and Max", "distrSelectedStalks(0)")
+            } else {
+                xlabel("Uniform diameter distribution between Min and Max")
+            }
+            xvalue("Max diameter of Stalks (um)",  "MaxDimStalk", 1, "distrSelectedStalks()", 0, 1)
+            xvalue("Min diameter of Stalks (um)",  "MinDimStalk", 1, "distrSelectedStalks()", 0, 1)
+            xlabel("-------------------------------------------------------------------------------------------------------------------------")
+            xlabel("Uniform length distribution between Min and Max")
+            xvalue("Max length of Stalks (um)","MaxLenStalk", 1, "distrSelectedStalks()", 0, 1)
+            xvalue("Min length of Stalks (um)","MinLenStalk", 1, "distrSelectedStalks()", 0, 1)
+            xlabel("=============================================================")
+            xpanel(0)
+
+            xpanel("")
+            xlabel("========= Dendritic geometry and distribution of Z coordinate =========")
+            xlabel("Seed of random number to modify Z coordinate")
+            xlabel("of each segment from - 1 to 1 um")
+            xvalue("Z coordinate Random number","Z_coordinate", 1, "stretch(Z_coordinate, ScalingDiam)", 0, 1)
+            xvalue("Scaling of diameter","ScalingDiam", 1, "stretch(Z_coordinate, ScalingDiam)", 0, 1)
+            xlabel("-------------------------------------------------------------------------------------------------------------------------")
+            xvalue("Gap Electrical resistance (Megaohm)","GapResistance", 1,"res_gap(GapResistance, potential)", 0, 1  )
+            xvalue("Gap reverse potential (mV)","potential", 1,"res_gap(GapResistance, potential)", 0, 1  )
+            xlabel("=============================================================")
+            xpanel(0)
+
+            // xpanel("Ca Gap parameteres",0)
+            // xlabel("Definition of Ca gap junction relaxation time in ms. ")
+            // xvalue("Gap Ca time constant (ms)","TimeRelexCalcium", 1,"CaGapFlux(TimeRelexCalcium)", 0, 1  )
+            // xpanel(0)
+        }
+        vBoxLeftPanel.intercept(0)	//ends intercept mode
+        vBoxLeftPanel.map("Geometry") // ends of Geometry of Astrocyte 
+
+        // Plots
+        vBoxCentralPanel = new VBox()
+        vBoxCentralPanel.intercept(1)
+        {
+            // Space plot of Voltage
+            plotShapeMainV = new PlotShape(0)
+            fast_flush_list.append(plotShapeMainV)
+            plotShapeMainV.size(-50,50,-50,50)
+            plotShapeMainV.view(-50, -50, 100, 100, 165, 169, 400.64, 400.32)
+            plotShapeMainV.exec_menu("Shape Plot")
+            plotShapeMainV.variable("v")
+            plotShapeMainV.show(0)
+            plotShapeMainV.scale(-85,-80)  // mV, scale of voltage on 3D plots
+
+            graphMainSomaV = new Graph()
+            addplot(graphMainSomaV,0)
+            graphMainSomaV.size(0, tstop, -85, -80)
+            graphMainSomaV.addvar("soma.v(0.5)")
+        }
+        vBoxCentralPanel.intercept(0)
+        vBoxCentralPanel.map("Plots")
+
+        // Right panel
+        xpanel("Various scenarios for calculating astrocyte dynamics")
+        xlabel("Compute and plot Distance from soma (L), Volume ratio (Vr),")
+        xlabel("Volume (V), Surface (S) and Surface/Volume.")
+        xlabel("Results are also saved to the VolumeFraction.txt")
+        xbutton("Geometrical Parameters", "GeometricalParameters()")
+        xlabel("====================== Simulations ======================")
+        xlabel("Simulation of FRAP experiment with circular geometry")
+        xbutton("Frap in Circle Geometry", "SimulationSelected(1)")
+        xlabel("---------------------------------------------------------------------------------------------------------")
+        xlabel("Simulation of FRAP experiment with linear geometry")
+        xbutton("Frap in Line Geometry","SimulationSelected(2)")
+        xlabel("---------------------------------------------------------------------------------------------------------")
+        xlabel("Simulation of the spatial distribution of voltage along large prosesses") 
+        xbutton("Spatial Voltage Distributions", "SimulationSelected(3)")
+        xlabel("---------------------------------------------------------------------------------------------------------")
+        xlabel("Parameters of steady state stimulations into soma")
+        xbutton("Constant Electrical Stimulations", "SimulationSelected(4)")
+        xlabel("---------------------------------------------------------------------------------------------------------")
+        xlabel("Parameters of sinusoidal stimulations into soma")
+        xbutton("Frequency Electrical Stimulation","SimulationSelected(5)")
+        xlabel("---------------------------------------------------------------------------------------------------------")
+        xlabel("Parameters for Calcium dynamics")
+        xbutton("Calcium dynamics", "SimulationSelected(6)")
+        xlabel("---------------------------------------------------------------------------------------------------------")
+        xlabel("Calcium Wave")
+        xbutton("Calcium Wave", "SimulationSelected(7)")
+        xlabel("---------------------------------------------------------------------------------------------------------")
+        xlabel("Astrocyte model with Glutamate transport")
+        xbutton("Glutamate Dynamics", "SimulationSelected(8)")
+        xlabel("=======================================================")
+        xlabel("By default cadifus is only inserted into soma and dendrites")
+        xlabel("and uninserted during 'Glutamate dynamics' to speed up computation.")
+        xlabel("Cadifus can be inserted using following parameters.")
+        xlabel("Simulation should be restarted after changing any of them.")
+        xstatebutton("Insert cadifus in leaves (excluding 'Glutamate dynamics')", &cadifusInElectricalLeaves, "InsertCadifusInElectricalLeaves(cadifusInElectricalLeaves)")
+        xstatebutton("Insert cadifus everywhere in 'Glutamate dynamics'", &cadifusInAllGlu, "InsertCadifusInAllGlu(cadifusInAllGlu)")
+        xpanel()
+    }
+    vBoxMainPanel.intercept(0)
+    vBoxMainPanel.map("Repertoire of computation")
+}
+
+proc showRunPanel() {
+    xpanel("RunControl", 0)
+    xvalue("Init","v_init", 1,"stdinit()", 1, 1 )
+    xbutton("Init & Run","run()")
+    xbutton("Stop","stoprun=1")
+    xvalue("Continue til","runStopAt", 1,"{continuerun(runStopAt) stoprun=1}", 1, 1 )
+    xvalue("Continue for","runStopIn", 1,"{continuerun(t + runStopIn) stoprun=1}", 1, 1 )
+    xbutton("Single Step","steprun()")
+    xvalue("t","t", 2 )
+    xvalue("Tstop","tstop", 1,"tstop_changed()", 0, 1 )
+    xvalue("dt","dt", 1,"setdt()", 0, 1 )
+    xvalue("Points plotted/ms","steps_per_ms", 1,"setdt()", 0, 1 )
+    xvalue("Scrn update invl","screen_update_invl", 1,"", 0, 1 )
+    xvalue("Real Time","realtime", 0,"", 0, 1 )
+    xpanel(30,166)
+}

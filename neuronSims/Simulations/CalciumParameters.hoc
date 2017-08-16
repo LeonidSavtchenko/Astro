@@ -1,0 +1,79 @@
+// UI
+objref vBoxCadifusParams
+
+// Inits Calcium parameters.
+proc initCaParams() {
+    DCa_cadifus = 0.15
+    TBufs_cadifus = 0.07
+    kfs_cadifus = 1000
+    KDs_cadifus = 10
+    TBufm_cadifus = 0.0075
+    kfm_cadifus = 1000
+    KDm_cadifus = 0.24
+    DBufm_cadifus = 0.05
+    cath_cadifus = 2e-005
+    gamma_cadifus = 20
+    vmax_cadifus = 3.75e-006
+    Kp_cadifus = 0.00027
+    jmax_cadifus = 0.0035
+    caer_cadifus = 0.4
+    Kip3_cadifus = 0.0008
+    Kact_cadifus = 0.0003
+    kon_cadifus = 2.7
+    Kinh_cadifus = 0.0002
+    vrat_cadifus[0] = 0.239983
+}
+
+initCaParams()
+
+// Shows Calcium parameters list.
+proc showCaParameters() {
+    vBoxCadifusParams = new VBox()
+    vBoxCadifusParams.intercept(1)
+    {
+        xpanel("")
+        xlabel("The diffusion coefficient of intracellular calcium dynamics")
+        xvalue("DCa_cadifus","DCa_cadifus", 1,"", 0, 0 )
+        xlabel("The total concentration of endogeneous Ca buffer")
+        xvalue("Concentration steady  Ca Buffer ","TBufs_cadifus", 1,"", 0, 0 )
+        xlabel("The Kf of endogeneous buffer")
+        xvalue("k_fs","kfs_cadifus", 1,"", 0, 0 )
+        xlabel("The KD of endogeneous buffer")
+        xvalue("KD steady","KDs_cadifus", 1,"", 0, 0 )
+        xlabel("The total concentration of mobile/added Ca buffer")
+        xvalue("TBufm_cadifus","TBufm_cadifus", 1,"", 0, 0 )
+        xlabel("The Kf of mobile/added buffer")
+        xvalue("kfm_cadifus","kfm_cadifus", 1,"", 0, 0 )
+        xlabel("The KD of mobile/added buffer")
+        xvalue("KDm_cadifus","KDm_cadifus", 1,"", 0, 0 )
+        xlabel("The diffusion coefficient of mobile buffer")
+        xvalue("Diffusion Buffer mobile","DBufm_cadifus", 1,"", 0, 0 )
+        xlabel("Threshold for Ca pump activity")
+        xvalue("Ca threshold","cath_cadifus", 1,"", 0, 0 )
+        xlabel("Ca pump flux density")
+        xvalue("Gamma","gamma_cadifus", 1,"", 0, 0 )
+        xlabel("Maximum flux of Ca pump")
+        xvalue("Vmax","vmax_cadifus", 1,"", 0, 0 )
+        xlabel("Parameter of Ca sensivity of pump")
+        xvalue("Kp_cadifus","Kp_cadifus", 1,"", 0, 0 )
+        xlabel("Parameter of Ca flux of SERCA channel")
+        xvalue("jmax_cadifus","jmax_cadifus", 1,"", 0, 0 )
+        xlabel("Ca reverse concentration of ER")
+        xvalue("CaER","caer_cadifus", 1,"", 0, 0 )
+        xvalue("Kip3_cadifus","Kip3_cadifus", 1,"", 0, 0 )
+        xlabel("Parameter of flux SERCA channel")
+        xvalue("Kact_cadifus","Kact_cadifus", 1,"", 0, 0 )
+        xlabel("Open kinetic parameter of  SERCA channel")
+        xvalue("kon_cadifus","kon_cadifus", 1,"", 0, 0 )
+        xlabel("Close kinetic parameter of  SERCA channel")
+        xvalue("Kinh_cadifus","Kinh_cadifus", 1,"", 0, 0 )
+        xlabel("Dimensionless numeric value of vrat[i] equals the volume") 
+        xlabel("of annulus i of a 1um diameter cylinder multiplied by diam^2")
+        xlabel("to get volume per um length")
+        xvalue("vrat_cadifus[0]","vrat_cadifus[0]", 0,"", 0, 1 )
+        xlabel("-------------------------------------------------------------------------------------------------------------------")
+        xpanel()
+    }
+    vBoxCadifusParams.intercept(0)
+    vBoxCadifusParams.map("cadifus (Globals)", 1147, 102, 360, 654)
+}
