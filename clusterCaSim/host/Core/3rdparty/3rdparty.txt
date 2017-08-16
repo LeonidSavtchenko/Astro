@@ -1,0 +1,6 @@
+Nano simulator uses some 3rd party applications as listed below:
+
+Application                       Downloaded from
+host\Core\3rdparty\plink.exe      http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html
+host\Core\3rdparty\pscp.exe       --||--
+host\Core\3rdparty\7za.exe        http://www.7-zip.org/download.html

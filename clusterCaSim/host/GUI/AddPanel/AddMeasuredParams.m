@@ -1,0 +1,19 @@
+function AddMeasuredParams()
+    
+    AddPanel('Measured');
+    
+    watchedVars = { ...
+%       Comp.       Index   Param.  Coord.
+        'dendrite'  30      'cai'    0.5   ;
+        'dendrite'  31      'cai'    0.5    };
+    defaultValues = { ...
+        '?'         -1      '?'      nan    };
+    colNames = {'Comp.', 'Index', 'Param.', 'Coord.'};
+    desc = {'The list of watched variables:', ...
+            '<b>Comp.:</b> <i>the compartment name</i>', ...
+            '<b>Index:</b> <i>the compartment index (zero based)</i>', ...
+            '<b>Param.:</b> <i>the watched parameter name</i>', ...
+            '<b>Coord.:</b> <i>the probe relative coordinate in range [0, 1]</i>'};
+    AddResizableMatrix('watchedVars', watchedVars, defaultValues, colNames, desc, true, 'valPred_watchedVars(watchedVars)');
+    
+end

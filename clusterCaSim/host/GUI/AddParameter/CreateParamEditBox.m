@@ -1,0 +1,26 @@
+function [hc, xPos] = CreateParamEditBox(value, xPos, desc,   enable)
+
+    global panIdx params layout palette
+    
+    if nargin < 4
+        enable = 'on';
+    end
+    
+    xPos = xPos + layout.xMargin2;
+    parIdx = length(params{panIdx}) + 1;
+    
+    % Prepare tooltip
+    desc = DescToHtmlString(desc);
+    
+    hc = uicontrol('Style', 'edit', ...
+                   'Enable', enable, ...
+                   'Units', 'pixels', ...
+                   'Position', [xPos, 0, layout.ebWidth, layout.ebHeight], ...
+                   'String', num2str(value), ...
+                   'UserData', [panIdx, parIdx], ...
+                   'BackgroundColor', palette.validColor, ...
+                   'Callback', @generic_Callback, ...
+                   'TooltipString', desc);
+    xPos = xPos + layout.ebWidth;
+    
+end
