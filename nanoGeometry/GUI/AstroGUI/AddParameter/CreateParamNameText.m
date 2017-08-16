@@ -1,0 +1,16 @@
+function [hc, xPos] = CreateParamNameText(name)
+
+    global layout palette
+    
+    name = [name, ': '];
+    xPos = layout.xMargin0 + layout.rgWidth + layout.xMargin1;
+    hc = uicontrol('Style', 'text', ...
+                   'Units', 'pixels', ...
+                   'HorizontalAlignment', 'right', ...
+                   'Position', [xPos, 0, layout.nameWidth, layout.ebHeight], ...
+                   'BackgroundColor', palette.backgroundColor, ...
+                   'String', name);
+        
+    xPos = xPos + layout.nameWidth;
+    
+end
