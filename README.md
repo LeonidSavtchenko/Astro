@@ -17,6 +17,12 @@ To our knowledge, this is the first attempt to have a full-scale tool for astrog
 
 ## Installation. 
 
+System Requirements for ASTRO:
+•	The basic languages : C++, MATLAB older 2013 and Neuron 7.0
+•	Platform : Linux and Windows. 
+•	Type of operation : Sequential and parallel (MPI) computing
+
+
 To work with Astro software the user needs to have Matlab and Neuron on the host computer, as well as Linux and NEURON on the remote computer. 
 
 
