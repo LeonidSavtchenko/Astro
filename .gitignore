@@ -1,0 +1,14 @@
+# Ignored files:
+*.c
+*.o
+CircularFrapAverage.txt
+TimeFRAP.txt
+VolumFraction.txt
+mcomplex.dat
+nrnmech.dll
+params.hoc
+perf.dat
+
+# Ignored folders:
+results/
+x86_64/

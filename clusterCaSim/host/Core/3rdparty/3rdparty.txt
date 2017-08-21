@@ -1,4 +1,4 @@
-Nano simulator uses some 3rd party applications as listed below:
+Astro simulator uses some 3rd party applications as listed below:
 
 Application                       Downloaded from
 host\Core\3rdparty\plink.exe      http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html
