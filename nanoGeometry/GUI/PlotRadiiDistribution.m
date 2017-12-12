@@ -23,7 +23,7 @@ function PlotRadiiDistribution(radiiDistribution, minRadii, maxRadii, statistics
     end
     
     % Setup plots
-    xlabel('Radii range');
+    xlabel('Radius (um) ');
     ylabel('Number of cylinders');
     plotWidth = maxRadii(1, 1) + statisticsStep;      
     set(gca, ...

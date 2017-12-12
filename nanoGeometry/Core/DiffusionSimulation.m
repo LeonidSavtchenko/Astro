@@ -131,7 +131,7 @@ function DiffusionSimulation(data)
         % Add particles-left plot
         subplot(3, 2, [5, 6]);  
         ylabel('Particles passed');       
-        xlabel('Time');
+        xlabel('Time (ms)');
         hold on;
         for geometry = [cylinderGeometry, realGeometry]
             particlesLeftPlot{geometry} = plot(Time, particlesLeftInTime(geometry, :), plotColor{geometry});
@@ -554,8 +554,8 @@ function DiffusionSimulation(data)
         for i = 2:size(reduced, 2)
             plot(plotTime, reduced, plotColor{geometry});
         end
-        xlabel('Time');
-        ylabel('Time of out');
+        xlabel('Time, ms');
+        ylabel('Particles per ms');
     end
 
 end
