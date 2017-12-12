@@ -1,0 +1,9 @@
+//load_file("SimPotassium.hoc")
+//load_file("runcontrol.ses")
+
+//RunAstroPotasasium()
+
+proc advance() {
+    fadvance()
+   PotasasiumIteration(PX, PY, RFRAP, TimeBegin, DCoef, Kduration, PX2, KCurrent, KpLeak, PZ, KResting)
+}

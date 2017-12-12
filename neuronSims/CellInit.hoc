@@ -1,0 +1,106 @@
+// Number of Gaps distributed in the model astrocyte
+GapJunctionMaxNumber = NumberDendrites+1
+objref gaps[GapJunctionMaxNumber]
+
+NumberListSoma = 1
+// Total number of geometrical objects
+// NumberDendrites is a Number in the file of 3D reconstruction
+SizeTotal = (NumberDendrites+NumberListSoma)*NumberLeaves+1
+// Leaves
+create LargeGlia[SizeTotal]
+create SmallGlia[SizeTotal]
+
+// Sets default initial params to soma and dendrites which doesn't depend on simulation.
+proc setSomaDendrCommonParams() {
+    for i = 1, NumberDendrites-SeedNumber-1 {
+        dendrite[i] connect dendrite[i+SeedNumber](0), 1
+        access dendrite[i+SeedNumber]
+        { L = 0.1 diam = 3 }    // L and dim in um define the geometry of small seeds
+        pt3dclear()
+    }
+
+    soma {
+        Ra = 100                // Ohm cm
+        cm = 0.8                // uF/cm2
+        nseg = 10
+        insert pas
+        e_pas = -85             // mV 
+        g_pas = 1/11150         // mS/cm2
+        
+        for i = 2, NumberDendrites {
+            gaps[i] = new Gap(0.5)
+            gaps[i].r = 100000
+            setpointer gaps[i].vgap, v(0.5)
+        }
+    }
+
+    for i = 0, NumberDendrites-1 dendrite[i] {
+        Ra = 100                // Ohm cm
+        cm = 0.8                // uF/cm2
+        nseg = 10
+        insert pas
+        e_pas = -85             // mV
+        g_pas = 1/11150         // mS/cm2
+        gaps[1] = new Gap(0.5)
+        gaps[1].r = 100000
+        setpointer gaps[1].vgap, v(0.5)
+    }
+
+    // Gap junction inside the astrocite
+    for i = 0, NumberDendrites-2 dendrite[i] {
+        setpointer gaps[2+i].vgap, dendrite[i].v(0.5)
+    }
+
+    setpointer gaps[1].vgap, soma.v(0.5)
+}
+
+// This part defines the topology of Astrocyte
+// Connects leaves and stalks.
+proc addLeaves() {
+    connect LargeGlia[0](0), dendrite[0](1)
+
+    for i = 0, NumberLeaves-1 {
+        connect SmallGlia[i](0), LargeGlia[i](1)
+        connect LargeGlia[i+1](0), SmallGlia[i](1)
+    }
+
+    for i =  1, NumberDendrites-1 {
+        connect LargeGlia[NumberLeaves*i+1](0), dendrite[i](1)
+    }
+
+    for i = NumberLeaves+1, NumberLeaves+NumberLeaves-1 {
+        for j =  0, NumberDendrites-2 {
+            connect SmallGlia[NumberLeaves*j+i](0), LargeGlia[NumberLeaves*j+i](1)
+            connect LargeGlia[NumberLeaves*j+i+1](0), SmallGlia[NumberLeaves*j+i](1)
+        }
+    }
+}
+
+// Sets default initial params to stalks and leaves which doesn't depend on simulation.
+proc setLeavesCommonParams() {
+    for i = 0, SizeTotal-1 LargeGlia[i] {
+        insert pas
+        nseg = 1
+        Ra = 100        // Ohm cm
+        cm = 0.8        // uF/cm2
+        e_pas = -85     // mV
+    }
+
+    for i = 0, SizeTotal-1 SmallGlia[i] {
+        insert pas
+        nseg = 1
+        Ra = 100        // Ohm cm
+        cm = 0.8
+        e_pas = -85     // mV
+        g_pas = 1/11150 // mho/cm2
+    }
+}
+
+// Inits all the cell params.
+proc initCell() {
+    setSomaDendrCommonParams()
+    addLeaves()
+    setLeavesCommonParams()
+}
+
+// initCell()

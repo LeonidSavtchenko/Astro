@@ -1,0 +1,189 @@
+// 0 - Electric mechanisms, 1 - Glutamate mechanisms
+currentMechanismSetup = 0
+cadifusInElectricalLeaves = 0
+cadifusInAllGlu = 0
+
+// Insert-uninsert FRAP and set its params.
+// $1 - Boolean. 1 - insert. 0 - uninsert.
+proc SectionInsertFRAP() {
+    if ($1 > 0) {
+        insert FRAP
+        DFree_FRAP=0.15        // um2/sm
+    } else {
+        uninsert FRAP
+    }
+}
+
+// Insert-uninsert cadifus and set its params.
+// $1 - Boolean. 1 - insert. 0 - uninsert.
+proc SectionInsertCadifus() {
+    if ($1 > 0) {
+        insert cadifus
+        DCa_cadifus=0.30       // um2/sm
+        ip3i=1e-5              // initial ip3 mM
+    } else {
+        uninsert cadifus
+    }
+}
+
+// Insert-uninsert mechanisms for electrical simulations.
+// $1 - Boolean. 1 - insert. 0 - uninsert.
+proc InsertElectricMechanisms() {
+    // Soma
+    soma {
+        SectionInsertFRAP($1)
+        SectionInsertCadifus($1)
+    }
+
+    // Dendrites
+    for i = 0, NumberDendrites-1 dendrite[i]  {
+        SectionInsertFRAP($1)
+        SectionInsertCadifus($1)
+    }
+
+    // Leaves
+    for i = 0, SizeTotal-1 LargeGlia[i] {
+        SectionInsertFRAP($1)
+
+        if ($1 > 0) {
+            if (cadifusInElectricalLeaves == 1) {
+                SectionInsertCadifus(1)
+            }
+        } else {
+            SectionInsertCadifus(0)
+        }
+    }
+    
+    // Stalks
+    for i = 0, SizeTotal-1 SmallGlia[i] {
+        SectionInsertFRAP($1)
+
+        if (cadifusInElectricalLeaves == 1) {
+            SectionInsertCadifus($1)
+        }
+    }
+}
+
+// Insert-uninsert mechanisms needed for Glutamate simulation and set their params.
+// $1 - Boolean. 1 - insert. 0 - uninsert.
+proc SectionInsertGlutamateMechanisms() {
+    if ($1 > 0) {
+        insert CAl
+        insert kdrglia
+        insert kir
+        insert GluTrans
+        Gluout_GluTrans= 20e-6   // mM
+
+        if (cadifusInAllGlu == 1) {
+            SectionInsertCadifus(1)
+        }
+    } else {
+        uninsert CAl
+        uninsert kdrglia
+        uninsert kir
+        uninsert GluTrans
+        SectionInsertCadifus(0)
+    }
+    
+}
+
+// Insert-uninsert mechanisms needed for Potasasium simulation and set their params.
+// $1 - Boolean. 1 - insert. 0 - uninsert.
+proc SectionInsertPotasasiumMechanisms() {
+   
+        Ra = 100
+        cm = 1
+        insert pas
+        g_pas = 0.001
+        e_pas = -85    
+        insert kdifl
+        D_kdifl = 0.6
+	    ki0_kdifl=110	
+	    insert kpump
+   
+        uninsert CAl
+        uninsert kdrglia
+        uninsert kir
+        uninsert GluTrans       
+}
+
+
+
+// Insert-uninsert mechanisms for Glutamate simulation.
+// $1 - Boolean. 1 - insert. 0 - uninsert.
+proc InsertGlutamateMechanisms() {
+    // Soma
+    soma {
+        SectionInsertGlutamateMechanisms($1)
+    }
+
+    // Dendirtes
+    for i = 0, NumberDendrites-1 dendrite[i] {
+        SectionInsertGlutamateMechanisms($1)
+    }
+    
+    // Leaves
+    for i = 0, SizeTotal-1 LargeGlia[i] {
+        SectionInsertGlutamateMechanisms($1)
+        if ($1 > 0) {
+            density_GluTrans=(1+diam/(2*L))*DensityGluTransporters
+        }
+    }
+
+    // Stalks
+    for i = 0, SizeTotal-1 SmallGlia[i] {
+        SectionInsertGlutamateMechanisms($1)
+    }
+}
+
+
+// Insert-uninsert mechanisms for Potasasium simulation.
+// $1 - Boolean. 1 - insert. 0 - uninsert.
+proc InsertPotassiumMechanisms() {
+    // Soma
+    soma {
+       SectionInsertPotasasiumMechanisms()
+    }
+
+    // Dendirtes
+    for i = 0, NumberDendrites-1 dendrite[i] {
+       SectionInsertPotasasiumMechanisms()
+    }
+    
+    // Leaves
+    for i = 0, SizeTotal-1 LargeGlia[i] {
+       SectionInsertPotasasiumMechanisms()
+    }
+
+    // Stalks
+    for i = 0, SizeTotal-1 SmallGlia[i] {
+       SectionInsertPotasasiumMechanisms()
+    }
+}
+
+
+
+// Updates current mechanisms.
+proc ResetMechanisms() {
+    if (currentMechanismSetup == 0) {
+        InsertElectricMechanisms(0)
+        InsertElectricMechanisms(1)
+    } else {
+        InsertGlutamateMechanisms(0)
+        InsertGlutamateMechanisms(1)
+    }
+}
+
+// Insert-uninsert cadifus in leaves for electrical simulations.
+// $1 - Boolean. 1 - insert. 0 - uninsert.
+proc InsertCadifusInElectricalLeaves() {
+    cadifusInElectricalLeaves = $1
+    ResetMechanisms()
+}
+
+// Insert-uninsert cadifus in soma, dendrites and leaves for Glutamate simulation.
+// $1 - Boolean. 1 - insert. 0 - uninsert.
+proc InsertCadifusInAllGlu() {
+    cadifusInAllGlu = $1
+    ResetMechanisms()
+}
