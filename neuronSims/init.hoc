@@ -3,18 +3,30 @@
     Simulation scripts to compute Astrocyte dynamics from cable compartmental models implemented in NEURON simulation environment.
     Astrocyte works reliably on a biophysically detailed multi-compartmental 3D structure with ion channels in some or all compartments.
 
-    Last updated 07-December-2017
+    Last updated 13-December-2017
     Developed by : DR. Leonid Savtchenko, Prof.Dmitri Rusakov
     DCEE, Institute of Neurology, University College LondonLondon, UK
     Email: leonid.savtchenko@ucl.ac.uk
 */
-
+objref Boxleaves
+ Boxleaves = new VBox()
+ Boxleaves.intercept(1)
 //******************************************************
 // Number of leaves per stalk
 // The number is infinit but if the number more 50 you need a cluster computer to compute
+{
 NumberLeaves = 12
+xpanel("Number of Leaves")
+        xlabel("========== Load astrocyte geometry files ==========")
+        xlabel("Critical parameter of Geometry")
+        xlabel("Defines number of leaves")		
+		xvalue("Number of leaves","NumberLeaves", 1, "", 0, 1)	
 //******************************************************
 //******************************************************
+ xpanel(0)
+}
+ Boxleaves.intercept(0)
+ Boxleaves.map("Leaves Number", 50, 300, -1, -1)
 
 load_file("nrngui.hoc")
 load_file("Utils.hoc")
@@ -119,6 +131,7 @@ proc loadGeometryFileReconstract() {
 proc initMainProgram() {
     vBoxSelectGeometry.unmap()
     plotShapeGeometry.unmap()
+	Boxleaves.unmap()
     load_file("MainProgram.hoc")
     runMain()
 }
