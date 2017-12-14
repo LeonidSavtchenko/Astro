@@ -4,13 +4,13 @@ ASTROCYTE 1.0. Interactive realistic model of protoplasmic astrocyte. NEURON env
 
 ## version 1.0
 
-Electrically non-excitable astrocytes are able to transduce, integrate and propagate physiological signals by engaging 
+<p>Electrically non-excitable astrocytes are able to transduce, integrate and propagate physiological signals by engaging 
 multi-modal fluctuations and non-dissipative diffusion waves of intracellular Ca2+. Deciphering this type of signalling, 
 however, poses a conceptual challenge because it requires an understanding of molecular interactions in the complex 
 system of ultrathin processes which constitute the bulk of astrocyte morphology. How a particular mode of intracellular 
 Ca2+ signalling could generate a particular physiological message remains poorly understood. Gaining mechanistic insights 
 into astrocytic physiology will be therefore difficult without a detailed biophysical model that recapitulates realistic 
-astrocyte morphology and known cellular mechanisms.
+astrocyte morphology and known cellular mechanisms.</p>
 
 
 
