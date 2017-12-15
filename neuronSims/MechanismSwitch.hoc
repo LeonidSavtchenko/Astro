@@ -43,6 +43,8 @@ proc InsertElectricMechanisms() {
 
     // Leaves
     for i = 0, SizeTotal-1 LargeGlia[i] {
+	insert pas
+	   
         SectionInsertFRAP($1)
 
         if ($1 > 0) {

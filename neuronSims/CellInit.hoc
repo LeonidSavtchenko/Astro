@@ -84,6 +84,7 @@ proc setLeavesCommonParams() {
         Ra = 100        // Ohm cm
         cm = 0.8        // uF/cm2
         e_pas = -85     // mV
+		
     }
 
     for i = 0, SizeTotal-1 SmallGlia[i] {
@@ -92,7 +93,7 @@ proc setLeavesCommonParams() {
         Ra = 100        // Ohm cm
         cm = 0.8
         e_pas = -85     // mV
-        g_pas = 1/11150 // mho/cm2
+       // g_pas = 1/11150 // mho/cm2
     }
 }
 

@@ -57,6 +57,7 @@ proc stretchXY() { local i, j, scaleNew
             
         }
     }
+	
 	 vBoxSelectGeometryReal.unmap()
 }
 
@@ -87,6 +88,7 @@ proc CaGapFlux() {
 // $4 - Min length for uniform distribution
 // $5 - Boolean. 0 - uniform distribution for diameters. 1 - distribution from file.
 // $6 - DensityGluTransporters
+// $7 - Membrane density conductance, mS/cm2
 proc setLeaves() {
     // All density function of membrane kinetic  must be multiply by 1+D/2L to take into account the lateral surface 
     for i = 0, SizeTotal-1 LargeGlia[i] {
@@ -97,7 +99,7 @@ proc setLeaves() {
         }
         
         L = randomLeavesDiameters.uniform($4, $3)
-        g_pas = (1+diam/(2*L))*(1/11150)  // mho/cm2
+        g_pas = (1+diam/(2*L))*$7 //(1/11150)  // mho/cm2
 
         if (currentMechanismSetup == 1) {
             density_GluTrans=(1+diam/(2*L))*$6

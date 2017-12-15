@@ -30,12 +30,14 @@ proc initParamsMain() {
 	
    // stretch(Z_coordinate, ScalingDiam)
 	//stretchXY( LengthXY, LengthZ, ShiftXY)
-
+    //LengthXY = 1
+	//LengthZ =1
+	//ShiftXY=0
     // This parameter defines how fast calcium relaxes between neighbouring astrocytes.
     // The larger value means a slower connection between astrocytes.
     // TimeRelexCalcium = 100000       // ms
-    // insertGapJunc()
-    // CaGapFlux(TimeRelexCalcium)
+    insertGapJunc()
+    CaGapFlux(TimeRelexCalcium)
 
     InsertElectricMechanisms(1)
 
@@ -44,7 +46,8 @@ proc initParamsMain() {
     MinDimLeaves = 0.1              // um
     MaxLenLeaves = 0.12             // um
     MinLenLeaves = 0.1              // um
-    setLeaves(MaxDimLeaves, MinDimLeaves, MaxLenLeaves, MinLenLeaves, nanoDistrLoaded, DensityGluTransporters)
+	GPassive = 0.001 // 
+    setLeaves(MaxDimLeaves, MinDimLeaves, MaxLenLeaves, MinLenLeaves, nanoDistrLoaded, DensityGluTransporters, GPassive)
     
     MaxDimStalk = 0.1               // um
     MinDimStalk = 0.1               // um

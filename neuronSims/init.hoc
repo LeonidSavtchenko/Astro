@@ -119,7 +119,9 @@ proc loadGeometryFileReconstract() {
    xpanel()
    vBoxSelectGeometryReal.intercept(0)
    vBoxSelectGeometryReal.map("Astrocyte model", 500, 300, -1, -1)	
-	//stretchXY( LengthXY, LengthZ, ShiftXY)	
+   //stretchXY( LengthXY, LengthZ, ShiftXY)
+   
+   
 }
 
 

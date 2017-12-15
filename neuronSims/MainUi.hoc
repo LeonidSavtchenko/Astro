@@ -12,7 +12,7 @@ proc distrSelectedLeaves() {
     if (numarg() >= 1) {
         distrStatusLeaves = $1
     }
-    setLeaves(MaxDimLeaves, MinDimLeaves, MaxLenLeaves, MinLenLeaves, distrStatusLeaves, DensityGluTransporters)
+    setLeaves(MaxDimLeaves, MinDimLeaves, MaxLenLeaves, MinLenLeaves, distrStatusLeaves, DensityGluTransporters, GPassive)
 }
 
 // Change distribution of Stalks
@@ -74,6 +74,8 @@ proc SimulationSelected() {
     }
 }
 
+TimeRelexCalcium=100000
+
 // Shows main program UI.
 proc showMainUi() {
     vBoxMainPanel = new HBox()
@@ -96,12 +98,14 @@ proc showMainUi() {
                 xlabel("Uniform diameter distribution between Min and Max")
             }
             xvalue("Max diameter of Leaves (um)","MaxDimLeaves", 1, "distrSelectedLeaves()", 0, 1)
-            xvalue("Min diameter of Leaves (um)","MinDimLeaves", 1, "distrSelectedLeaves()", 0, 1)
+            xvalue("Min diameter of Leaves (um)","MinDimLeaves", 1, "distrSelectedLeaves()", 0, 1)			
             xlabel("-------------------------------------------------------------------------------------------------------------------------")
             xlabel("Uniform length distribution between Min and Max")
             xvalue("Max length of Leaves (um)","MaxLenLeaves", 1, "distrSelectedLeaves()", 0, 1)
             xvalue("Min length of Leaves (um)","MinLenLeaves", 1, "distrSelectedLeaves()", 0, 1)
-            xlabel("=============================================================")
+            xlabel("==========Passive membrane current Ip=Gp*(V- Vr), where Vr=-85 mV =======")
+			xvalue("Membrane  conductance, Gp  (mS/cm2)","GPassive", 1, "distrSelectedLeaves()", 0, 1)
+			xlabel("=============================================================")
             xpanel(0)
 
             xpanel("Stalks Geometry")
@@ -139,10 +143,10 @@ proc showMainUi() {
             xlabel("=============================================================")
             xpanel(0)
 
-            // xpanel("Ca Gap parameteres",0)
-            // xlabel("Definition of Ca gap junction relaxation time in ms. ")
-            // xvalue("Gap Ca time constant (ms)","TimeRelexCalcium", 1,"CaGapFlux(TimeRelexCalcium)", 0, 1  )
-            // xpanel(0)
+            xpanel("Ca Gap parameteres",0)
+            xlabel("Definition of Ca gap junction relaxation time in ms. ")
+            xvalue("Gap Ca time constant (ms)","TimeRelexCalcium", 1,"CaGapFlux(TimeRelexCalcium)", 0, 1  )
+            xpanel(0)
         }
         vBoxLeftPanel.intercept(0)	//ends intercept mode
         vBoxLeftPanel.map("Geometry") // ends of Geometry of Astrocyte 
@@ -228,5 +232,5 @@ proc showRunPanel() {
     xvalue("Points plotted/ms","steps_per_ms", 1,"setdt()", 0, 1 )
     xvalue("Scrn update invl","screen_update_invl", 1,"", 0, 1 )
     xvalue("Real Time","realtime", 0,"", 0, 1 )
-    xpanel(30,166)
+    xpanel(0,166)
 }
