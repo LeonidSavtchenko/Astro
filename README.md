@@ -15,7 +15,7 @@ into astrocytic physiology will be therefore difficult without a detailed biophy
 astrocyte morphology and known cellular mechanisms.
 </p>
 
-![astro](https://user-images.githubusercontent.com/19924227/34001958-4dd4909e-e0e9-11e7-9f8a-3e5411b0ada1.png)
+
 
 
 ## Experimental data or estimates desirable to build a realistic astrocyte model
