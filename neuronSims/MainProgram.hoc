@@ -37,7 +37,7 @@ proc initParamsMain() {
     // The larger value means a slower connection between astrocytes.
     // TimeRelexCalcium = 100000       // ms
     insertGapJunc()
-    CaGapFlux(TimeRelexCalcium)
+    CaGapFlux(jd)
 
     InsertElectricMechanisms(1)
 
@@ -51,8 +51,8 @@ proc initParamsMain() {
     
     MaxDimStalk = 0.1               // um
     MinDimStalk = 0.1               // um
-    MaxLenStalk = 1                 // um
-    MinLenStalk = 0.9               // um
+    MaxLenStalk = 1*12/NumberLeaves                 // um
+    MinLenStalk = 0.9*12/NumberLeaves               // um
     setStalks(MaxDimStalk, MinDimStalk, MaxLenStalk, MinLenStalk, nanoDistrLoaded, DensityGluTransporters)
 
     dt = 1

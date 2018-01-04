@@ -84,7 +84,7 @@ proc showGlutamateUi() {
         xvalue("Uncaging onset (ms)","TimeBegin", 1,"", 0, 1 )
         xvalue("Glutamate concentration Max (uM)","MaxGlu", 1,"", 0, 1 )
         xvalue("Distance between two release (um)","PX2", 1,"", 0, 1 )
-        xvalue("Intracelluylar Glutamate in (mM)","Gluin", 1,"", 0, 1 )
+        //xvalue("Intracellular Glutamate in (mM)","Gluin", 1,"", 0, 1 )
         xvalue("Tau rise (ms)","Tau1", 1,"", 0, 1 )
         xvalue("Tau decay (ms)","Tau2", 1,"", 0, 1 )
         xlabel("======================================================")

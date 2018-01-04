@@ -29,6 +29,7 @@ proc loadDiamDistrFile() { local divisions localobj radiiFile, line, neuronLine,
         for group = 1, 2 {
             // Amount of non-non-zero-probability groups
             divisions = radiiFile.scanvar()
+			print divisions
 
             if (group == 1) {
                 diamDistrStalks = new Matrix(divisions, 2)

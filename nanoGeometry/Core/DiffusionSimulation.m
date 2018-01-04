@@ -166,7 +166,7 @@ function DiffusionSimulation(data)
                         
                         % Add charge
                         if (startX(geometry, j)^2+startY(geometry, j)^2+startZ(geometry, j)^2) > 0.001^2 && charge ~= 0
-                            endZ(geometry, j) = endZ(geometry, j) + charge * 0.1 * StepRad * startZ(geometry, j) / sqrt(startX(geometry, j)^2+startY(geometry, j)^2+startZ(geometry, j)^2);
+                            endZ(geometry, j) = endZ(geometry, j) + charge * 0.1 * StepRad * (StepRad/0.2121) *startZ(geometry, j) / sqrt(startX(geometry, j)^2+startY(geometry, j)^2+startZ(geometry, j)^2);
                         end
                                                 
                         % Choose between simulation complexity

@@ -52,7 +52,7 @@ proc initParamsFrapLine() {
     LineWidth = 1.5     // um, bleaching line width
     AlphaX = 2          // um, the angle of inclination of a straight line
     Y_Coor = -20        // y = Alpha*x+ Y_Coor
-    BasicFRAP = 1
+    BasicFRAP = 0.2
     DFreeFRAP = 0.3     // (um2/ms)
     AlphaFRAP = 0.0001  // mM/ms
     iterations = 4
@@ -75,22 +75,22 @@ proc showFrapLineUi() { localobj plotShapeFrapioniLine
             xlabel("---------------------------------------------------------------------------------------------------------------------")
             xlabel("Width of linear bleaching area in um")
             xvalue("Line width (um) ","LineWidth", 1, "", 0, 1)
-            xlabel("Angle of incidence of linear bleaching")
+            xlabel("Angle of incidence of linear bleaching in tan X-Y coordinate")
             xvalue("Alpha (um)","AlphaX", 1, "", 0, 1)
             xlabel("Position of bleaching at x = 0")
-            xvalue("Y_Coord","Y_Coor", 1, "", 0, 1)
+            xvalue("Y-axis intersect, Y(X=0) (um)","Y_Coor", 1, "", 0, 1)
             xlabel("---------------------------------------------------------------------------------------------------------------------")
-            xlabel("Basic concentration of FRAP molecules")
-            xvalue("Basic FRAP in mM","BasicFRAP", 1, "", 0, 1)
-            xlabel("Speed of bleaching")
-            xvalue("Alpha (mM/ms)","AlphaFRAP", 1, "", 0, 1)
+            xlabel("Initial indicator  concentration")
+            xvalue("Indicator concentration (mM)","BasicFRAP", 1, "", 0, 1)
+            xlabel("Photobleaching rate")
+            xvalue("Rate (mM/ms)","AlphaFRAP", 1, "", 0, 1)
             xvalue("DFree (um2/ms)","DFreeFRAP", 1, "", 0, 1)
             xlabel("===========================================================")
             xpanel(0)
 
             xpanel("")
             xlabel("========================== Running ==========================")
-            xvalue("Time of bleaching (recovery)","iterationTime", 1, "updateTstop()", 0, 1)
+            xvalue("Duration of bleaching (recovery)","iterationTime", 1, "updateTstop()", 0, 1)
             xvalue("Bleaching-recovery iterations","iterations", 1, "updateTstop()", 0, 1)
             xlabel("Run simulation. Results are saved to the TimeFRAP.txt")
             xbutton("Run FRAP", "runFrapLine()")

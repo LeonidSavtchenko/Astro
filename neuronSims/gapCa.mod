@@ -1,8 +1,11 @@
+: 04 01 2018
+: Modification of ica
+
 NEURON {
     POINT_PROCESS GapCa
     NONSPECIFIC_CURRENT icagap
     USEION ca READ cai WRITE ica
-    RANGE TimeRelex, icagap, ica, BasicCa, fluxion
+    RANGE TimeRelex, icagap, ica, BasicCa, fluxion, jd
     POINTER gapCaP
 }
 
@@ -18,6 +21,7 @@ UNITS {
 PARAMETER {
     TimeRelex = 10000 (ms) 
     BasicCa = 1 (mM)
+	jd = 0 (mA/mM)
 }
 
 ASSIGNED {
@@ -31,6 +35,8 @@ ASSIGNED {
 
 BREAKPOINT {
     fluxion=BasicCa*TimeRelex 
-    ica = (1e+16)*(((cai - 50e-6 (mM))/fluxion)*(2*FARADAY))            : Gap junction between Astrocytes
+	ica = jd * (1e+6)*(cai - 50e-6 (mM))
+    : ica = (1e+16)*(((cai - 50e-6 (mM))/fluxion)*(2*FARADAY))            : Gap junction between Astrocytes
+	
     : ica = (1e+16)*(((cai - gapCaP (mM))/fluxion)*(2*FARADAY))         : Gap Junction inside the astrocyte   
 }

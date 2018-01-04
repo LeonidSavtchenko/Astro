@@ -74,7 +74,7 @@ proc SimulationSelected() {
     }
 }
 
-TimeRelexCalcium=100000
+jd=0 // Ca gap junction flux
 
 // Shows main program UI.
 proc showMainUi() {
@@ -86,43 +86,43 @@ proc showMainUi() {
         vBoxLeftPanel.intercept(1)
         {
             xpanel("Leaf geometry")
-            xlabel("======================= Leaves Geometry =======================")
-            xlabel("This procedure determines the nano structures,")
-            xlabel("which are short and have large diameters.")
-            xlabel("There are the prototypes of the base dimensions of astrocyte nanostructures. ")
+            xlabel("======================= Leaf Geometry =======================")
+            xlabel("Main parameters of nanoscopic")
+            xlabel("processes (Leaves)")
+            xlabel("")
             xlabel("-------------------------------------------------------------------------------------------------------------------------")
             if (nanoDistrLoaded == 1) {
                 xradiobutton("Diameter distribution from file", "distrSelectedLeaves(1)", 1)
-                xradiobutton("Uniform diameter distribution between Min and Max", "distrSelectedLeaves(0)")
+                xradiobutton("Stochastic uniform distribution of diameters between  Min and Max", "distrSelectedLeaves(0)")
             } else {
-                xlabel("Uniform diameter distribution between Min and Max")
+                xlabel("Stochastic uniform distribution of diameters between  Min and Max")
             }
             xvalue("Max diameter of Leaves (um)","MaxDimLeaves", 1, "distrSelectedLeaves()", 0, 1)
             xvalue("Min diameter of Leaves (um)","MinDimLeaves", 1, "distrSelectedLeaves()", 0, 1)			
             xlabel("-------------------------------------------------------------------------------------------------------------------------")
-            xlabel("Uniform length distribution between Min and Max")
+            xlabel("Stochastic uniform length distribution between Min and Max")
             xvalue("Max length of Leaves (um)","MaxLenLeaves", 1, "distrSelectedLeaves()", 0, 1)
             xvalue("Min length of Leaves (um)","MinLenLeaves", 1, "distrSelectedLeaves()", 0, 1)
             xlabel("==========Passive membrane current Ip=Gp*(V- Vr), where Vr=-85 mV =======")
-			xvalue("Membrane  conductance, Gp  (mS/cm2)","GPassive", 1, "distrSelectedLeaves()", 0, 1)
+			xvalue("Specific membrane  conductance, Gm (mS/cm2)","GPassive", 1, "distrSelectedLeaves()", 0, 1)
 			xlabel("=============================================================")
             xpanel(0)
 
             xpanel("Stalks Geometry")
             xlabel("======================= Stalks Geometry =======================")
-            xlabel("These are transitional structures between the leaves.")
-            xlabel("They are long and have small diameters")
+            xlabel("Stalks are thin higher-order branches that")
+            xlabel(" connect nanoscopic processes (Leaves)")
             xlabel("-------------------------------------------------------------------------------------------------------------------------")
             if (nanoDistrLoaded == 1) {
                 xradiobutton("Diameter distribution from file", "distrSelectedStalks(1)", 1)
-                xradiobutton("Uniform diameter distribution between Min and Max", "distrSelectedStalks(0)")
+                xradiobutton("Stochastic uniform diameter distribution between Min and Max", "distrSelectedStalks(0)")
             } else {
-                xlabel("Uniform diameter distribution between Min and Max")
+                xlabel("Stochastic uniform diameter distribution between Min and Max")
             }
             xvalue("Max diameter of Stalks (um)",  "MaxDimStalk", 1, "distrSelectedStalks()", 0, 1)
             xvalue("Min diameter of Stalks (um)",  "MinDimStalk", 1, "distrSelectedStalks()", 0, 1)
             xlabel("-------------------------------------------------------------------------------------------------------------------------")
-            xlabel("Uniform length distribution between Min and Max")
+            xlabel("Stochastic uniform length distribution between Min and Max")
             xvalue("Max length of Stalks (um)","MaxLenStalk", 1, "distrSelectedStalks()", 0, 1)
             xvalue("Min length of Stalks (um)","MinLenStalk", 1, "distrSelectedStalks()", 0, 1)
             xlabel("=============================================================")
@@ -143,9 +143,9 @@ proc showMainUi() {
             xlabel("=============================================================")
             xpanel(0)
 
-            xpanel("Ca Gap parameteres",0)
-            xlabel("Definition of Ca gap junction relaxation time in ms. ")
-            xvalue("Gap Ca time constant (ms)","TimeRelexCalcium", 1,"CaGapFlux(TimeRelexCalcium)", 0, 1  )
+            xpanel("Diffusion-escape Gap Junction",0)
+            xlabel("Diffusion-escape Gap Junction ")
+            xvalue("Diffusion leak rate, jg (nA/mM)","jd", 1,"CaGapFlux(jd/(1e+6))", 0, 1  )
             xpanel(0)
         }
         vBoxLeftPanel.intercept(0)	//ends intercept mode
@@ -175,16 +175,16 @@ proc showMainUi() {
 
         // Right panel
         xpanel("Various scenarios for calculating astrocyte dynamics")
-        xlabel("Compute and plot Distance from soma (L), Volume ratio (Vr),")
-        xlabel("Volume (V), Surface (S) and Surface/Volume.")
-        xlabel("Results are also saved to the VolumeFraction.txt")
+        xlabel("To display the radial distribution of: S/V ratio,")
+        xlabel("tissue volume fraction, volume, surface area, and branch diameter")
+        xlabel("Results are  saved to the VolumeFraction.txt")
         xbutton("Geometrical Parameters", "GeometricalParameters()")
         xlabel("====================== Simulations ======================")
         xlabel("Simulation of FRAP experiment with  round-spot bleaching")
         xbutton("FRAP with round-spot bleaching", "SimulationSelected(1)")
         xlabel("---------------------------------------------------------------------------------------------------------")
-        xlabel("Simulation of FRAP experiment with linear bleaching")
-        xbutton("FRAP with linear bleaching","SimulationSelected(2)")
+        xlabel("Simulation of linescan FRAP")
+        xbutton("Linescan FRAP","SimulationSelected(2)")
         xlabel("---------------------------------------------------------------------------------------------------------")
         xlabel("Simulation of the spatial distribution of voltage along large prosesses") 
         xbutton("Membrane voltage distribution", "SimulationSelected(3)")
@@ -195,23 +195,23 @@ proc showMainUi() {
         xlabel("Parameters of sinusoidal stimulations into soma")
         xbutton("Variable electric stimuli","SimulationSelected(5)")
         xlabel("---------------------------------------------------------------------------------------------------------")
-        xlabel("Parameters for Calcium dynamics")
-        xbutton("Calcium dynamics", "SimulationSelected(6)")
+        xlabel("Parameters for microscopic Calcium dynamics")
+        xbutton("Microscopic Calcium dynamics", "SimulationSelected(6)")
         xlabel("---------------------------------------------------------------------------------------------------------")
         xlabel("Calcium Wave")
         xbutton("Calcium Wave", "SimulationSelected(7)")
         xlabel("---------------------------------------------------------------------------------------------------------")
         xlabel("Astrocyte model with Glutamate transporters")
-        xbutton("Glutamate Dynamics", "SimulationSelected(8)")
+        xbutton("Membrane biophysics with glutamate transport", "SimulationSelected(8)")
 		xlabel("Astrocyte model with potasasium dynamics")
-        xbutton("Potassium Dynamics", "SimulationSelected(9)")
+        xbutton("Dynamics of intracellular K+", "SimulationSelected(9)")
         xlabel("=======================================================")
-        xlabel("By default cadifus is only inserted into soma and dendrites")
+        xlabel("By default  Ca active mechanism is only inserted into soma and dendrites")
         xlabel("and uninserted during 'Glutamate dynamics' to speed up computation.")
-        xlabel("Cadifus can be inserted using following parameters.")
+        xlabel("Ca active mechanism can be inserted using following parameters.")
         xlabel("Simulation should be restarted after changing any of them.")
-        xstatebutton("Insert cadifus in leaves (excluding 'Glutamate dynamics')", &cadifusInElectricalLeaves, "InsertCadifusInElectricalLeaves(cadifusInElectricalLeaves)")
-        xstatebutton("Insert cadifus everywhere in 'Glutamate dynamics'", &cadifusInAllGlu, "InsertCadifusInAllGlu(cadifusInAllGlu)")
+        xstatebutton("Insert Ca active mechanism in leaves (excluding 'Glutamate dynamics')", &cadifusInElectricalLeaves, "InsertCadifusInElectricalLeaves(cadifusInElectricalLeaves)")
+        xstatebutton("Insert Ca active mechanism everywhere in 'Glutamate dynamics'", &cadifusInAllGlu, "InsertCadifusInAllGlu(cadifusInAllGlu)")
         xpanel()
     }
     vBoxMainPanel.intercept(0)

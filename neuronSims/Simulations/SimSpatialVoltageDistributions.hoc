@@ -26,7 +26,7 @@ proc runDendro() {
 
 // Inits UI and simulation parameters.
 proc initParamsSpatialVoltage() {
-    Amplitude = 0.1 
+    Amplitude = 1 
     DurationPlot = 10000
     tstop = 10
 }
@@ -38,7 +38,7 @@ proc showSpatialVoltageUi() {
     {
         xpanel("")
         xlabel("Simulation of Voltage spatial distribution")
-        xvalue("Stimul amplitude (nA)","Amplitude", 1, "", 0, 1)
+        xvalue("Stimulus amplitude (nA)","Amplitude", 1, "", 0, 1)
         xvalue("Duration (ms)","DurationPlot", 1, "", 0, 1)
         xvalue("Computation time (ms)","tstop", 1, "", 0, 1)
         xbutton("Run", "runDendro()")
@@ -47,14 +47,14 @@ proc showSpatialVoltageUi() {
         removeIfExists(flush_list, graphDendrogramm)
         graphDendrogramm = new Graph(0)
         flush_list.append(graphDendrogramm)
-        graphDendrogramm.size(-20, 80, -90, -80)
-        graphDendrogramm.view(0, -90, 110, 10, 10, 319, 389.7, 318.7)
-        graphDendrogramm.label(0.05, 1, "mV", 2, 1, 0, 1, 1)
-        graphDendrogramm.label(0.9, 0.21, "um", 2, 1, 0, 1, 1)
-        graphDendrogramm.label(0.9, 0.85, "E", 2, 1, 0, 1, 1)
+        graphDendrogramm.size(-25, 80, -86, -80)
+        graphDendrogramm.view(-10, -88, 110, 10, 10, 319, 389.7, 318.7)
+        graphDendrogramm.label(0.05, 1, "Voltage, mV", 2, 1, 0, 1, 1)
+        graphDendrogramm.label(0.5, 0.2, "Distance from soma, um", 2, 1, 0, 1, 1)
+        //graphDendrogramm.label(0.9, 0.85, "E", 2, 1, 0, 1, 1)
         graphDendrogramm.yaxis(3)
-        graphDendrogramm.xaxis(-2, 80, -90, 2, 0, 0, 1)
-        graphDendrogramm.yaxis(-90, -80, -2, 5, 0, 0, 1)
+        graphDendrogramm.xaxis(-2, 80, -86, 2, 0, 0, 1)
+        graphDendrogramm.yaxis(-86, -80, -2, 5, 0, 0, 1)
 
         //for i = 0, OriginalDendrite-1 {
 		  for i = 1, OriginalDendrite-1 {

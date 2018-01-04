@@ -52,7 +52,7 @@ proc stimulCalcium()  { local AmplitudeOfCalcium, BasicCalciumNoise, i
     // spontaneouse Ca entry. TotalNUmberGapJunction points of entry
     for i = 1, $9-1 {  
         inpdata = randomCalcium.uniform(0, 1)
-        inputSt[i].ECa = $3
+        inputSt[i].ECa = 10*$3
         inputSt[i].tau1 = $4                // ms rise time
         inputSt[i].tau2 = $5                // ms decay time
         //Ca big signal in interval $8 and number $6 
@@ -100,7 +100,7 @@ proc runCaDynamics() {
 proc initParamsCaDynamics() {
     BasicStimulus = 100         // 0 StrengthOfNetworkStimulus  for Basic calcium responses - noise
     Interval = 3                // ms, the interval between stimulus in ms for a noisy calcium dynamics
-    ECaresting = 0.001          // 0.001 mM,  Reverse Calcium concentration
+    ECaresting = 0.0001          // 0.001 mM,  Reverse Calcium concentration
     Tau1St = 10                 // ms, The Rise time of Ca
     Tau2St = 0.1                // The time delay Calcium signal in ms
     NumberStim = 600            // Number of stimulus of noisy Ca 

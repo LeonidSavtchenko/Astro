@@ -17,8 +17,8 @@ function PlotRadiiDistribution(radiiDistribution, minRadii, maxRadii, statistics
     if cylindersPerLevel > 1
         hold on;
         smallBarPlot = bar(radiiDistribution(:, 1) + statisticsStep / 2, radiiDistribution(:, 3:(cylindersPerLevel + 2)), 1);  
-        set(smallBarPlot(1), 'FaceColor', 'r');
-        set(smallBarPlot(2), 'FaceColor', 'g');      
+        set(smallBarPlot(1), 'FaceColor', 'g');
+        set(smallBarPlot(2), 'FaceColor', 'b');      
         hold off; 
     end
     

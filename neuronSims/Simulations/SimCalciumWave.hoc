@@ -16,10 +16,10 @@ proc showCaWaveUi() {
     {
         xpanel("")
         xlabel("=========== Parameters of waves===========")
-        xvalue("Time the onset of calcium wave generation","TimeDelayCaWave", 1,"", 0, 1)
-        xvalue("Released  Ip3 concnetration in mM","InitIp3", 1,"", 0, 1  )
+        xvalue("IP3 increase onset (ms)","TimeDelayCaWave", 1,"", 0, 1)
+        xvalue("IP3 peak concentration (mM)","InitIp3", 1,"", 0, 1  )
         xlabel("=========================================")
-        xvalue("Simulation time in ms","tstop", 1,"", 0, 1  )
+        xvalue("Run time","tstop", 1,"", 0, 1  )
         xbutton("Run simulation", "run()")
         xpanel()
     }

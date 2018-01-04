@@ -77,7 +77,7 @@ proc insertGapJunc() { local i
 // NOT USED
 proc CaGapFlux() {
     for i = 0, SizeTotal-2 {
-        gapsca[i].TimeRelex = $1
+        gapsca[i].jd = $1
     }
 }
 
