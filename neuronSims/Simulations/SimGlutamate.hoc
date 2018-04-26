@@ -28,28 +28,26 @@ proc stimulGlu() {
 proc GluIteration () { local tau1, tau2
     tau1 = $5
     tau2 = $9
-
+    InitialGlutamateConcentration = 20e-6
     forall {
         if (( (($1-x3d(1))^2 + ($2-y3d(1))^2  < $3^2) || (($1+$7-x3d(1))^2+($2-y3d(1))^2  < $3^2))  && (($10-z3d(1))^2 < 100) && (t > $4)) {
-            Gluout_GluTrans = 20e-6+$6*(tau2/(tau2-tau1)*(-exp(-(t-$4)/tau1) + exp(-(t-$4)/tau2)))
+            Gluout_GluTrans = InitialGlutamateConcentration + $6*(tau2/(tau2-tau1)*(-exp(-(t-$4)/tau1) + exp(-(t-$4)/tau2)))
         } else  {
-            Gluout_GluTrans = 20e-6
+            Gluout_GluTrans = InitialGlutamateConcentration
         }
-
         Gluin_GluTrans = $8
     }
 }
 
 // Runs Glutamate simulation.
 proc runGlutamate() {
-    stimulGlu(Amplitude, Duration)
+    //stimulGlu(Amplitude, Duration)
     run()
-
     // Remove point processes after simulation
     objref seClamp
 }
 
-// Sets initial UI and simulation params.
+// Sets initial UI and simulation parameters.
 proc initParamsGlutamate() {
     // Voltage Clamp of Soma, set of parameters
     Amplitude = -85       // Voltage clamp in mV
@@ -82,7 +80,7 @@ proc showGlutamateUi() {
 		xvalue("Z coordinate (um)","PZ ", 1,"", 0, 1 )
         xvalue("Uncaging radius (um) ","R_FRAP", 1,"", 0, 1 )
         xvalue("Uncaging onset (ms)","TimeBegin", 1,"", 0, 1 )
-        xvalue("Glutamate concentration Max (uM)","MaxGlu", 1,"", 0, 1 )
+        xvalue("Glutamate concentration Max (mM)","MaxGlu", 1,"", 0, 1 )
         xvalue("Distance between two release (um)","PX2", 1,"", 0, 1 )
         //xvalue("Intracellular Glutamate in (mM)","Gluin", 1,"", 0, 1 )
         xvalue("Tau rise (ms)","Tau1", 1,"", 0, 1 )
@@ -92,9 +90,9 @@ proc showGlutamateUi() {
 
         xpanel("")
         xlabel("================== Voltage clamp of soma==================")
-        xvalue("Somatic voltage clamp","Amplitude", 1,"", 0, 1)
+        xvalue("Somatic voltage clamp (mV)","Amplitude", 1,"", 0, 1)
         xvalue("Clamp duration (ms) ","Duration", 1,"", 0, 1)
-        xvalue("Simulation time","tstop", 1,"", 0, 1)
+        xvalue("Simulation time (ms)","tstop", 1,"", 0, 1)
         xbutton("Run simulation", "runGlutamate()")
         xpanel(328,129)
     }
@@ -147,8 +145,14 @@ proc showGlutamateUi() {
 }
 
 // Opens Glutamate simulation window.
+
 proc RunAstroGlu() {
+ if ($1 > 0) {
     load_file(1, "Simulations/PointProcessManager.hoc")
+	OnlySingleGluSimulations = 0
+	} else {
+	print "New trials"
+	}
     initParamsGlutamate()
     showGlutamateUi()
 }

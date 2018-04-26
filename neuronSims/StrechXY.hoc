@@ -1,0 +1,19 @@
+// 3D modification of Astro geometry reconstructed from real astrocyte
+// File was added at 2 Apr 2018
+proc stretchXY() { local i, j, scaleNew      
+	scaleLengthXY=$1
+	scaleLengthZ=$2
+	shiftToZero=$3
+	soma[0] {
+	for j = 0, n3d()-1 {            
+                pt3dchange(j, (x3d(j)-shiftToZero)/scaleLengthXY, (y3d(j)-shiftToZero)/scaleLengthXY,  z3d(j)/scaleLengthZ,  diam3d(j)/scaleLengthXY)
+        }
+	}
+	for i = 0, OriginalDendrite-1 dendrite[i] {
+	//print i
+        for j = 0, n3d()-1 {            
+                pt3dchange(j, (x3d(j)-shiftToZero)/scaleLengthXY, (y3d(j)-shiftToZero)/scaleLengthXY,  z3d(j)/scaleLengthZ,  diam3d(j)/scaleLengthXY)                        
+        }
+    }
+	vBoxSelectGeometryReal.unmap()
+}

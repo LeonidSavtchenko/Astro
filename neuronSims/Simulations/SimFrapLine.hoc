@@ -14,13 +14,14 @@ objref frapLineSections[SizeTotal*2]
 // $6 - DFree
 proc setInitialLineConcentration() { local i
     frapLineSectionsSize = 0
-
+   
     forall {
         frapion0_FRAP = $4      // mM, The concentration of molecules used for the FRAP
         DFree_FRAP = $6
 
         // Find sections within a line
         if (($1*x3d(1)+$2 < y3d(1)) && (($1*x3d(1)+$2+$3*sqrt(1+$1^2)) > y3d(1))) {
+		//print x3d(1)
             frapLineSections[frapLineSectionsSize] =  new SectionRef()
             frapLineSectionsSize += 1
 

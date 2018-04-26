@@ -73,6 +73,7 @@ proc SectionInsertGlutamateMechanisms() {
         insert CAl
         insert kdrglia
         insert kir
+		insert kdifl // New added
         insert GluTrans
         Gluout_GluTrans= 20e-6   // mM
 
@@ -83,6 +84,7 @@ proc SectionInsertGlutamateMechanisms() {
         uninsert CAl
         uninsert kdrglia
         uninsert kir
+		uninsert kdifl // New added
         uninsert GluTrans
         SectionInsertCadifus(0)
     }
@@ -92,21 +94,29 @@ proc SectionInsertGlutamateMechanisms() {
 // Insert-uninsert mechanisms needed for Potasasium simulation and set their params.
 // $1 - Boolean. 1 - insert. 0 - uninsert.
 proc SectionInsertPotasasiumMechanisms() {
-   
-        Ra = 100
-        cm = 1
-        insert pas
-        g_pas = 0.001
-        e_pas = -85    
+   if ($1 > 0) {
+        //Ra = 100
+        //cm = 1
+       // insert pas
+       // g_pas = 0.001
+       // e_pas = -85    
         insert kdifl
         D_kdifl = 0.6
 	    ki0_kdifl=110	
 	    insert kpump
-   
-        uninsert CAl
-        uninsert kdrglia
-        uninsert kir
-        uninsert GluTrans       
+   if (cadifusInAllGlu == 1) {
+            SectionInsertCadifus(1)
+        }
+    } else {
+       // uninsert CAl
+       // uninsert kdrglia
+       // uninsert kir
+       // uninsert GluTrans 
+	   uninsert kdifl
+       // D_kdifl = 0.6
+	   // ki0_kdifl=110	
+	   uninsert kpump
+}		
 }
 
 
@@ -115,11 +125,11 @@ proc SectionInsertPotasasiumMechanisms() {
 // $1 - Boolean. 1 - insert. 0 - uninsert.
 proc InsertGlutamateMechanisms() {
     // Soma
-    soma {
+    soma[0] {
         SectionInsertGlutamateMechanisms($1)
     }
 
-    // Dendirtes
+    // Dendrites
     for i = 0, NumberDendrites-1 dendrite[i] {
         SectionInsertGlutamateMechanisms($1)
     }
@@ -139,27 +149,27 @@ proc InsertGlutamateMechanisms() {
 }
 
 
-// Insert-uninsert mechanisms for Potasasium simulation.
+// Insert-uninsert mechanisms for potassium simulation.
 // $1 - Boolean. 1 - insert. 0 - uninsert.
 proc InsertPotassiumMechanisms() {
     // Soma
-    soma {
-       SectionInsertPotasasiumMechanisms()
+    soma[0] {
+       SectionInsertPotasasiumMechanisms($1)
     }
 
-    // Dendirtes
+    // Dendrites
     for i = 0, NumberDendrites-1 dendrite[i] {
-       SectionInsertPotasasiumMechanisms()
+       SectionInsertPotasasiumMechanisms($1)
     }
     
     // Leaves
     for i = 0, SizeTotal-1 LargeGlia[i] {
-       SectionInsertPotasasiumMechanisms()
+       SectionInsertPotasasiumMechanisms($1)
     }
 
     // Stalks
     for i = 0, SizeTotal-1 SmallGlia[i] {
-       SectionInsertPotasasiumMechanisms()
+       SectionInsertPotasasiumMechanisms($1)
     }
 }
 
@@ -189,3 +199,4 @@ proc InsertCadifusInAllGlu() {
     cadifusInAllGlu = $1
     ResetMechanisms()
 }
+

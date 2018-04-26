@@ -36,6 +36,7 @@ proc calculateAndWriteResults() { local i, FrapIonSum, BasicFrapIonSum, cylinder
     if (frapCircleSectionsSize > 1) {
         for i = 0, frapCircleSectionsSize - 1 {
             frapCircleSections[i].sec {
+		    
                 cylinderVolume = L*PI*diam^2/4
 
                 FrapIonSum += frapioni(0.5)*cylinderVolume
@@ -101,10 +102,10 @@ proc showFrapCircleUi() {
             xvalue("First center Y (um)","frapCenterY", 1, "", 0, 1)
             xlabel("-------------------------------------------------------------------------------------------------------------------------")
             xlabel("Radius of bleaching area")
-            xvalue("Radius","frapRadius", 1, "", 0, 1)
+            xvalue("Radius (um)","frapRadius", 1, "", 0, 1)
             xlabel("-------------------------------------------------------------------------------------------------------------------------")
             xlabel("Photobleaching of area is instantaneous with initial concentration")
-            xvalue("Initial concentration   ","initialFrapConcentration", 1, "", 0, 1)
+            xvalue("Initial concentration (normalised between 0 and 1)","initialFrapConcentration", 1, "", 0, 1)
             xlabel("========================================================== = ")
             xpanel()
 
@@ -115,7 +116,7 @@ proc showFrapCircleUi() {
             xvalue("Number of FRAP trials","numberOfTrials",1)
             xlabel("-------------------------------------------------------------------------------------------------------------------------")
             xlabel("Time of recovery aftre photobleaching")
-            xvalue("Time of recovery","tstop",10)
+            xvalue("Time of recovery (ms)","tstop",10)
             xlabel("-------------------------------------------------------------------------------------------------------------------------")
             xlabel("Run simulation. Results are saved to the CircularFrapAverage.txt")
             xbutton("Run FRAP ", "runFrapCircle(numberOfTrials)")

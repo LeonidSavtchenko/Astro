@@ -20,4 +20,4 @@ object_push(pointProcessWindow)
 }
 object_pop()
 pointProcessWindow = pointProcessWindow.v1
-pointProcessWindow.map("PointProcessGroupManager", 195, 705, 594, 300)
+pointProcessWindow.map("PointProcessGroupManager",  196, 810, 608.4, 352.8)

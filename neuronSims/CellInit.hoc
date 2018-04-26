@@ -24,8 +24,15 @@ proc setSomaDendrCommonParams() {
         cm = 0.8                // uF/cm2
         nseg = 10
         insert pas
-        e_pas = -85             // mV 
+		e_pas = -85             // mV 
         g_pas = 1/11150         // mS/cm2
+		insert k_ion
+		ko_k_ion=3
+		ki_k_ion=110
+        
+		
+		insert kir4
+		gkir_kir4=0
         
         for i = 2, NumberDendrites {
             gaps[i] = new Gap(0.5)
@@ -38,9 +45,18 @@ proc setSomaDendrCommonParams() {
         Ra = 100                // Ohm cm
         cm = 0.8                // uF/cm2
         nseg = 10
-        insert pas
+        
+		insert pas
         e_pas = -85             // mV
         g_pas = 1/11150         // mS/cm2
+		
+		insert k_ion
+		ko_k_ion=3
+		ki_k_ion=110
+		
+		insert kir4
+		gkir_kir4=0 
+		
         gaps[1] = new Gap(0.5)
         gaps[1].r = 100000
         setpointer gaps[1].vgap, v(0.5)
@@ -50,7 +66,6 @@ proc setSomaDendrCommonParams() {
     for i = 0, NumberDendrites-2 dendrite[i] {
         setpointer gaps[2+i].vgap, dendrite[i].v(0.5)
     }
-
     setpointer gaps[1].vgap, soma.v(0.5)
 }
 
@@ -85,19 +100,33 @@ proc setLeavesCommonParams() {
         cm = 0.8        // uF/cm2
         e_pas = -85     // mV
 		
+		insert k_ion
+		ko_k_ion=3
+		ki_k_ion=110
+		
+		insert kir4
+		gkir_kir4=0
+		
     }
 
     for i = 0, SizeTotal-1 SmallGlia[i] {
         insert pas
         nseg = 1
         Ra = 100        // Ohm cm
-        cm = 0.8
+        cm = 0.8        // uF/cm2
         e_pas = -85     // mV
+		
+		insert k_ion
+		ko_k_ion=3
+		ki_k_ion=110
+		
+		insert kir4
+		gkir_kir4=0
        // g_pas = 1/11150 // mho/cm2
     }
 }
 
-// Inits all the cell params.
+// Initial all the astrocyte parameters.
 proc initCell() {
     setSomaDendrCommonParams()
     addLeaves()

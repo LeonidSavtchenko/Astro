@@ -16,8 +16,9 @@ proc loadDiamDistrFile() { local divisions localobj radiiFile, line, neuronLine,
 
     // File selected
     if (radiiFile.chooser()) {
-        // Looking for NEURON word that's located before distribution
-        // TODO Add some action in case if file doesn't contan NEURON word 
+        // This procedure is
+		// looking for "NEURON" word inside the data file that's located before distribution
+        // TO DO Add some action in case if file doesn't contain NEURON word 
         // or has wrong distribution structure
         while (!radiiFile.eof() && strcmp(neuronLine.s, "NEURON") != 0) {
             radiiFile.gets(line.s)
@@ -49,7 +50,7 @@ proc loadDiamDistrFile() { local divisions localobj radiiFile, line, neuronLine,
         nanoDistrLoaded = 1
 
     } else {
-        // File selection canceled
+        print "File selection canceled"
     }
 }
 

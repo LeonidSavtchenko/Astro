@@ -21,8 +21,6 @@ proc res_gap() {
 proc stretch() { local i, j, scaleNew
     scaleNew = $2
     randomStretch = new Random($1)
-
-
     for i = 0, OriginalDendrite-2 dendrite[i] {
         for j = 0, n3d()-1 {
             if ( x3d(j) > 0.01 &&  y3d(j) > 0.01) {
@@ -40,46 +38,65 @@ proc stretch() { local i, j, scaleNew
 // $1 -XY
 // $2 - Z
 
-proc stretchXY() { local i, j, scaleNew      
-	scaleLengthXY=$1
-	scaleLengthZ=$2
-	shiftToZero=$3
-	soma[0] {
-	for j = 0, n3d()-1 {            
-                pt3dchange(j, (x3d(j)-shiftToZero)/scaleLengthXY, (y3d(j)-shiftToZero)/scaleLengthXY,  z3d(j)/scaleLengthZ,  diam3d(j)/scaleLengthXY)
-        }
-	}
-	for i = 0, OriginalDendrite-1 dendrite[i] {
-	print i
-        for j = 0, n3d()-1 {            
-                pt3dchange(j, (x3d(j)-shiftToZero)/scaleLengthXY, (y3d(j)-shiftToZero)/scaleLengthXY,  z3d(j)/scaleLengthZ,  diam3d(j)/scaleLengthXY)
-            
-            
-        }
-    }
-	
-	 vBoxSelectGeometryReal.unmap()
+
+// Gap junction modifying the Ca concentration
+//****************************************************************************************
+proc GapCaJunc() {
+   dendrite[$1] { gapsca[$1] = new GapCa(0.5)}
+    setpointer  gapsca[$1].gapCaP, dendrite[$2].cai(0.5) gapsca[$1].jd = 0
 }
 
-// Inserts GapCa to Leaves.
-// Calcium Gap Junctions are located  ONLY in Large Glia Leaves
-// Specific calcium current affects the membrane potential and the Calcium concentration
-// Connections via gap junctions located on the Leaves !!!! Could we do say here that these are connections between neighbouring leaves?
-// NOT USED
+// Installation of two types ofGap junction,  GapJunction with another astrocyte (in LargeGlia) and autapse  Gap junctions
 proc insertGapJunc() { local i
-    for i = 0, SizeTotal-2 {
-        LargeGlia[i] gapsca[i] = new GapCa(0.5)
-        LargeGlia[i+1] gapsca[i+1] = new GapCa(0.5)
-    }
+   // for i = 0, SizeTotal-2 {    
+   //       LargeGlia[i] gapsca[i] = new GapCa(0.5)
+   for i = 0, NumberDendrites-2  {
+          dendrite[i] gapsca[i] = new GapCa(0.5)
+		  gapsca[i].jd = 0
+        }	
+	for i = 0, NumberDendrites-2  {
+	   dendrite[i] {insert CAl}
+	   }
+	for i = 0, NumberDendrites-3  {	  
+       GapCaJunc(i,i+1)
+	   GapCaJunc(i+1,i) 
+	   }
 }
+    //   LargeGlia[i+1] for j = 0, n3d()-1 { 
+	//   x1=x3d(j)
+	//    y1=y3d(j)	
+	//}
+	//if (sqrt((x-x1)*(x-x1)+(y-y1)*(y-y1)) < $2) {
+    //    gapsca[i].jd = $1
+	//	print i, sqrt((x-x1)*(x-x1)+(y-y1)*(y-y1))
+	//	} else {
+	//	gapsca[i].jd = 0
+	//	}
 
-// Modifies the parameter of TimeRelex. The TimeRelex = infinity means the Gap is closed.
-// NOT USED
 proc CaGapFlux() {
-    for i = 0, SizeTotal-2 {
-        gapsca[i].jd = $1
-    }
+    ControlParameter=$2
+	print "Contr=", ControlParameter, "jd=", jd
+    if (ControlParameter < 0.5) {
+	   // for i = 0, SizeTotal-2 {
+		//LargeGlia[i] {
+		for i = 0, NumberDendrites-2  {
+	     dendrite[i] {
+		  gapsca[i].jd = $1
+          gapsca[i].ControlGap=ControlParameter 		  
+		 }
+		  }
+	} else {
+	    for i = 0, NumberDendrites-2  {
+	     dendrite[i] {
+		 gapsca[i].jd = $1
+		 gapsca[i].ControlGap=ControlParameter 
+		 }
+	      }
+	       } 
 }
+//********************************************************************************************************
+
+
 
 // The procedure determines the geometry and biophysical properties of Leaves.
 // $1 - Max diameter for uniform distribution

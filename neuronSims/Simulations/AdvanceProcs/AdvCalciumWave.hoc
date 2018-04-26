@@ -2,7 +2,7 @@
 proc advance() { local i
     fadvance()
 
-    if ((t > TimeDelayCaWave) && (t < TimeDelayCaWave+5000)) {
+    if ((t > TimeDelayCaWave) && (t < TimeDelayCaWave+15000)) {
         for i = 1, OriginalDendrite {
             dendrite[i].ip3i = InitIp3
         }

@@ -283,6 +283,9 @@ KINETIC state {
     ~ ca[0] << (-(ica - ica_pmp_last)*PI*diam/(2*FARADAY))  : ica is Ca efflux
     : radial diffusion
     FROM i=0 TO Nannuli-2 {
+	:	if (ca[i] < cai0/2) {
+	:		 ca[i] = cai0/2
+	:	}
         ~ ca[i] <-> ca[i+1]  (DCa*frat[i+1], DCa*frat[i+1])
         ~ bufm[i] <-> bufm[i+1]  (DBufm*frat[i+1], DBufm*frat[i+1])
     }
@@ -304,6 +307,7 @@ KINETIC state {
         : leak
         ~ ca[i] << (dsqvol*alpha*L[i]*(1 - (ca[i]/caer)))
     }
+	
     cai = ca[0]
     fluo = cabufm[0]
     fluoNew = (BufferAlpha * cabufm[0] + ca[0] - BufferAlpha*(TBufm - bufm_0) - cai0)/(BufferAlpha*(TBufm - bufm_0) + cai0)

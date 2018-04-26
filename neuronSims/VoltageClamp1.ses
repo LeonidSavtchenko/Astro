@@ -1,0 +1,37 @@
+{load_file("nrngui.hoc")}
+objectvar save_window_, rvp_
+objectvar scene_vector_[11]
+objectvar ocbox_, ocbox_list_, scene_, scene_list_
+{ocbox_list_ = new List()  scene_list_ = new List()}
+
+//Begin PointProcessGroupManager
+{
+load_file("pointgrp.hoc")
+}
+{
+ocbox_ = new PointProcessGroupManager(0)
+}
+{object_push(ocbox_)}
+{
+ms = new MechanismStandard("SEClamp")
+ms.set("rs", 1, 0)
+ms.set("dur1", 100000, 0)
+ms.set("amp1", -85, 0)
+ms.set("dur2", 0, 0)
+ms.set("amp2", 0, 0)
+ms.set("dur3", 0, 0)
+ms.set("amp3", 0, 0)
+mnews("SEClamp", ms)
+select(0)
+execute("soma[0] ocbox_.move(0.65)")
+}
+{object_pop() doNotify()}
+{
+ocbox_ = ocbox_.v1
+ocbox_.map("PointProcessGroupManager", 196, 810, 608.4, 352.8)
+}
+objref ocbox_
+//End PointProcessGroupManager
+
+objectvar scene_vector_[1]
+{doNotify()}
