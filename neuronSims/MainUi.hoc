@@ -123,6 +123,7 @@ proc showMainUi() {
             xlabel("Stochastic uniform length distribution between Min and Max")
             xvalue("Max length of Leaves (um)","MaxLenLeaves", 1, "distrSelectedLeaves()", 0, 1)
             xvalue("Min length of Leaves (um)","MinLenLeaves", 1, "distrSelectedLeaves()", 0, 1)
+<<<<<<< HEAD
 			xlabel("========== Change Volume. Changes of diameters and lengths of segments =======")
 			xlabel("========== Change diameters in % to Diameter =======")
 			xvalue("Diameter change","DiameterParameter", 1, "changeVolume(DiameterParameter, LengthChange)", 0, 1)
@@ -130,6 +131,9 @@ proc showMainUi() {
 			xvalue("LengthChange change","LengthChange", 1, "changeVolume(DiameterParameter, LengthChange)", 0, 1)
             xlabel("==========Specific membrane  conductance =======")
 			xlabel("This membrane conductivity is scaled to base of leaf cylinders")
+=======
+            xlabel("==========Specific membrane  conductance =======")
+>>>>>>> origin/master
 			xvalue("Specific membrane  conductance, Gm (S/cm2)","GPassive", 1, "distrSelectedLeaves()", 0, 1)
 			//xlabel("=============================================================")
             xpanel(0)
@@ -162,6 +166,7 @@ proc showMainUi() {
             //xlabel("Seed of random number to modify Z coordinate")
             //xlabel("of each segment from - 1 to 1 um")
             //xvalue("Z coordinate Random number","Z_coordinate", 1, "stretch(Z_coordinate, ScalingDiam)", 0, 1)
+<<<<<<< HEAD
             
 			   xvalue("Scaling of diameter","ScalingDiam", 1, "stretch(Z_coordinate, ScalingDiam)", 0, 1)
 			
@@ -170,6 +175,13 @@ proc showMainUi() {
             xlabel("----Gap Junctions----------------------------------------------------------------------")
 			xvalue("Number of Gap-junctions, evenly distributed on the dendritic tree", "NumberDendrites")
             xvalue("Gap junction resistance (Megohm)","GapResistance", 1,"res_gap(GapResistance, potential)", 0, 1  )
+=======
+            xvalue("Scaling of diameter","ScalingDiam", 1, "stretch(Z_coordinate, ScalingDiam)", 0, 1)
+			//xvalue("Length x and Y","LengthXY", 1, "stretchXY(LengthXY, LengthZ)", 0, 1)
+            //xvalue("Length z","LengthZ", 1, "stretchXY(LengthXY, LengthZ)", 0, 1)
+            xlabel("----Gap Junctions----------------------------------------------------------------------")
+            xvalue("Gap junction resistance (Megaohm)","GapResistance", 1,"res_gap(GapResistance, potential)", 0, 1  )
+>>>>>>> origin/master
             xvalue("Gap junction reverse potential (mV)","potential", 1,"res_gap(GapResistance, potential)", 0, 1  )
             xlabel("=============================================================")
             xpanel(0)
@@ -214,8 +226,8 @@ proc showMainUi() {
         xlabel("Results are  saved to file VolumeFraction.txt")
         xbutton("Geometrical Parameters", "GeometricalParameters()")
         xlabel("====================== Simulations ======================")
-        xlabel("Simulation of FRAP experiment with  round-spot bleaching")
-        xbutton("FRAP with round-spot bleaching", "SimulationSelected(1)")
+        //xlabel("Simulation of FRAP experiment with  round-spot bleaching")
+        //xbutton("FRAP with round-spot bleaching", "SimulationSelected(1)")
         xlabel("---------------------------------------------------------------------------------------------------------")
         xlabel("Simulation of line-scan FRAP")
         xbutton("Line-scan FRAP","SimulationSelected(2)")
@@ -229,8 +241,13 @@ proc showMainUi() {
         //xlabel("Parameters of sinusoidal stimulations into soma")
         //xbutton("Variable electric stimuli","SimulationSelected(5)")
         xlabel("---------------------------------------------------------------------------------------------------------")
+<<<<<<< HEAD
         xlabel("Parameters for microscopic calcium dynamics")
         xbutton("Microscopic calcium dynamics", "SimulationSelected(6)")
+=======
+        xlabel("Parameters for microscopic Calcium dynamics")
+        xbutton("Microscopic Calcium dynamics", "SimulationSelected(6)")
+>>>>>>> origin/master
         xlabel("---------------------------------------------------------------------------------------------------------")
         xlabel("Calcium Wave simulations")
         xbutton("Calcium Wave", "SimulationSelected(7)")
