@@ -161,7 +161,7 @@ proc showSelectGeometryUi() {
 		//**************************************************************
 		 xlabel("========== Load astrocyte geometry files ==========")
         xlabel("Load basic astrocyte model with dendrites, soma and endfoot.")
-        xlabel("(Several examples can be found in 'Geometry' folder.) and endfoot geometry")
+        xlabel("(Several examples can be found in 'Geometry' folder.)")
         xbutton("Select stem tree with endfoot", "loadGeometryEndFootFile()")
 		//*************************************************************
 		 xlabel("========== Load astrocyte geometry files ==========")
@@ -171,12 +171,12 @@ proc showSelectGeometryUi() {
 		//*************************************************************
         xlabel("-----------------------------------------------------------------------------------------")
         xlabel("Load distribution of diameters for leaves and stalks")
-        xlabel("obtained from the Nano program for Matlab.")
+        xlabel("obtained using Nano programme.")
         xlabel("(Optional. Uniform distribution will be used instead.)")
         xbutton("Select diameter distribution for nano geometry", "loadDiamDistrFile()")
         xlabel("=============================================")
-        xlabel("Astrocyte model with Protocols of computation:")
-        xlabel("Frap, Electrical, Ca and Glu dynamics")
+        xlabel("Astrocyte model with protocols of computation:")
+        xlabel("FRAP, Electrical, Calcium, Glutamate and Potassium  dynamics")
         xbutton("Start Astro.", "initMainProgram()")
         xlabel("-----------------------------------------------------------------------------------------")
         xbutton("Quit", "quit()")

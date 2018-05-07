@@ -1,4 +1,14 @@
 COMMENT
+This file was modified from basic cadifus.mod from Chapter 9 Hines and Carnevale NEURON
+the computation of fluorescence was added 
+two types
+The fluorescence relates to the cocnetration of bound mobile buffer
+fluo = cabufm[0]
+
+fluoNew = (BufferAlpha * cabufm[0] + ca[0] - BufferAlpha*(TBufm - bufm_0) - cai0)/(BufferAlpha*(TBufm - bufm_0) + cai0)
+
+
+
 Calcium ion accumulation with radial and longitudinal diffusion, pump, 
 and SERCA.
 

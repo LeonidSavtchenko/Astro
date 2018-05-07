@@ -1,11 +1,18 @@
 COMMENT
 
-The model of Glutamate EAAC1 transporter.
-The kinetic scheme was from the paper 
+The model of Glutamate GLT1 transporter.
+is based on two papers, from the first article we took the basic kinetic scheme, 
 
-Zhang Z1, Tao Z, Gameiro A, Barcelona S, Braams S, Rauen T, Grewer C. 
+1. Zhang Z1, Tao Z, Gameiro A, Barcelona S, Braams S, Rauen T, Grewer C. 
 Transport direction determines the kinetics of substrate transport by the glutamate transporter EAAC1.
 Proc Natl Acad Sci U S A. 2007 Nov 13;104(46):18025-30. Epub 2007 Nov 8.
+
+from the second article we took dynamic constants that determine the dynamics of the transporter
+Bergles, D.E. & Jahr, C.E. 
+Synaptic activation of glutamate transporters in hippocampal astrocytes. Neuron 19, 1297-1308 (1997).
+
+
+
 
 ENDCOMMENT
 
