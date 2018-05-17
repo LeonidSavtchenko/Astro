@@ -103,7 +103,8 @@ proc showFrapLineUi() { localobj plotShapeFrapioniLine
             flush_list.append(graphFrapLine)
             graphFrapLine.size(-40, 40, 0.85*BasicFRAP, 1*BasicFRAP)
             graphFrapLine.xaxis()
-
+			graphFrapLine.label(0.0340357, 0.94, "Concentration (mM)", 2, 1, 0, 0, 1)
+             graphFrapLine.label(0.45, 0.01, "Distance (um)", 2, 1, 0, 0, 1)
             frapioniPlot = new RangeVarPlot("frapioni")
             dendrite[10] frapioniPlot.begin(0)
             dendrite[1] frapioniPlot.end(1)
@@ -122,6 +123,8 @@ proc showFrapLineUi() { localobj plotShapeFrapioniLine
         plotShapeFrapioniLine.variable("frapioni")
         plotShapeFrapioniLine.show(0)
         plotShapeFrapioniLine.scale(0.8*BasicFRAP, 1.0*BasicFRAP)
+		plotShapeFrapioniLine.label(0.0340357, 0.94, "Concentration (mM)", 2, 1, 0, 0, 1)
+           
     }
     hBoxFrapLine.intercept(0)
     hBoxFrapLine.map("Frap In Line")

@@ -198,11 +198,14 @@ proc showMainUi() {
             plotShapeMainV.variable("v")
             plotShapeMainV.show(0)
             plotShapeMainV.scale(-85,-80)  // mV, scale of voltage on 3D plots
+			plotShapeMainV.label(0.0340357, 0.94, "Voltage (mV)", 2, 1, 0, 0, 1)
 
             graphMainSomaV = new Graph()
             addplot(graphMainSomaV,0)
             graphMainSomaV.size(0, tstop, -85, -80)
             graphMainSomaV.addvar("soma.v(0.5)")
+			graphMainSomaV.label(0.0340357, 0.94, "Voltage (mV)", 2, 1, 0, 0, 1)
+            graphMainSomaV.label(0.45, 0.01, "Time (ms)", 2, 1, 0, 0, 1)
         }
         vBoxCentralPanel.intercept(0)
         vBoxCentralPanel.map("Plots")

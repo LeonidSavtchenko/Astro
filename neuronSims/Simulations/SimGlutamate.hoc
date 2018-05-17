@@ -1,5 +1,5 @@
 // UI
-objref vBoxGluMain, graphSEClamp, graphGluout, plotShapeVoltage, plotShapeGluOut
+objref vBoxGluMain, graphSEClamp, graphGluout, plotShapeVoltage, plotShapeGluOut, plotShapeitrans
 // SEClamp on the soma
 objref seClamp
 
@@ -139,9 +139,19 @@ proc showGlutamateUi() {
     plotShapeVoltage.view(-50, -49.9003, 100, 100, 1145, 102, 400.64, 400.32)
     plotShapeVoltage.exec_menu("Shape Plot")
     plotShapeVoltage.variable("v")
-	plotShapeVoltage.label(0.5, 0.09, "Transmembrane Voltage (mV)", 2, 1, 0, 1, 1)
+	plotShapeVoltage.label(0.1, 0.99, "Transmembrane Voltage (mV)", 2, 1, 0, 1, 1)
     plotShapeVoltage.show(0)
     plotShapeVoltage.scale(-85,-83)
+	
+	plotShapeitrans = new PlotShape(0)
+    fast_flush_list.append(plotShapeitrans)
+    plotShapeitrans.size(-50,50,-50,50)
+    plotShapeitrans.view(-50, -49.9003, 100, 100, 1145, 102, 400.64, 400.32)
+    plotShapeitrans.exec_menu("Shape Plot")
+    plotShapeitrans.variable("itrans_GluTrans")
+	plotShapeitrans.label(0.15, 0.99, "I (mA/cm2)", 2, 1, 0, 1, 1)
+    plotShapeitrans.show(0)
+    plotShapeitrans.scale(-0.07,0.07)
 }
 
 // Opens Glutamate simulation window.

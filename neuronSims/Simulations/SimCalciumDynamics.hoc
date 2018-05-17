@@ -123,10 +123,14 @@ proc showDendritesGraph() {
     graphDendrites = new Graph(0) 
     addplot(graphDendrites,0)
     graphDendrites.erase_all()
-    graphDendrites.size(0,50000,0,0.0001)
-    graphDendrites.view(0, 0, 50000, 0.0001, 602, 705, 400, 200)
+    //graphDendrites.size(0,50000,0,0.0001)
+	graphDendrites.size(910,50910,-1.86e-005,8.14e-005)
+    //graphDendrites.view(0, 0, 50000, 0.0001, 602, 705, 400, 200)
+	graphDendrites.view(910, -1.86e-005, 50000, 0.0001, 594, 901, 410.4, 344.8)
     graphDendrites.addvar("dendrite[d1].cai(0.5)",1,1,0.6, 0.9,2)
     graphDendrites.addvar("dendrite[d2].cai(0.5)",1,1,0.6, 0.9,2)
+	graphDendrites.label(0.469298, 0.05, "time (ms)", 2, 1, 0, 0, 1)
+    graphDendrites.label(0.0986842, 0.968387, "[Ca2+]in (mM)", 2, 1, 0, 0, 1)
 }
 
 // Shows Calcium Simulation UI.
@@ -173,6 +177,7 @@ proc showCaDynamicsUi() {
     fast_flush_list.append(plotShapeCai)
     plotShapeCai.size(-50,50,-50,50)
     plotShapeCai.view(-50, -49.9003, 100, 100, 601, 102, 400.64, 400.32)
+	plotShapeCai.label(0.0986842, 0.968387, "[Ca2+]in (mM)", 2, 1, 0, 0, 1)
     plotShapeCai.exec_menu("Shape Plot")
     plotShapeCai.variable("cai")
     plotShapeCai.show(0)
