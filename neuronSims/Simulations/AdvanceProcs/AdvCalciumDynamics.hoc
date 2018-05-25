@@ -5,4 +5,29 @@ proc advance() {
     graphDendrites.exec_menu("View = plot")
     
     fileCalciumTime.printf("%-6.5g\t%-6.5g\t%-6.5g\n", t, dendrite[ActiveDendrite1].cai(0.5), dendrite[ActiveDendrite2].cai(0.5))
+	
+	// these data are necessary for calculating Fig. 7 extra
+	// *********************************************************
+	
+	// if ((t > 100) && (t < 100+15000000)) {
+        // for i = 30, 32 {
+			 // dendrite[i].ip3i(0.1) = 0.003
+             // dendrite[i].ip3i(0.3) = 0.003
+			 
+             // dendrite[i].ip3i(0.5) = 0.003
+			 // dendrite[i].ip3i(0.7) = 0.003
+             // dendrite[i].ip3i(0.8) = 0.003
+			  // dendrite[i].ip3i(0.9) = 0.003
+             // dendrite[i].ip3i(1) = 0.003
+        // }
+
+     //  soma[0].ip3i = 0.01
+    // } else {
+        // for i = 1, OriginalDendrite {
+            // dendrite[i].ip3i = 0.0000001
+        // }
+
+   //    soma[0].ip3i = 0.0000001
+    // }
+	// *************************************************************************************
 }

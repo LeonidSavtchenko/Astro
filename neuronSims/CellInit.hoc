@@ -30,7 +30,7 @@ proc setSomaDendrCommonParams() {
 		ko_k_ion=3
 		ki_k_ion=110
         
-		
+		//insert ip3diffus
 		insert kir4
 		gkir_kir4=0
         
@@ -57,6 +57,7 @@ proc setSomaDendrCommonParams() {
 		insert kir4
 		gkir_kir4=0 
 		
+		//insert ip3diffus
         gaps[1] = new Gap(0.5)
         gaps[1].r = 100000
         setpointer gaps[1].vgap, v(0.5)

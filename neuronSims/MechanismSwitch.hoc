@@ -21,8 +21,11 @@ proc SectionInsertCadifus() {
         insert cadifus
         DCa_cadifus=0.30       // um2/sm
         ip3i=1e-5              // initial ip3 mM
+		//insert ip3diffus
+		
     } else {
         uninsert cadifus
+	//	uninsert ip3diffus
     }
 }
 

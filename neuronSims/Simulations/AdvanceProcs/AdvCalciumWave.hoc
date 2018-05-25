@@ -10,9 +10,9 @@ proc advance() { local i
         soma[0].ip3i = InitIp3
     } else {
         for i = 1, OriginalDendrite {
-            dendrite[i].ip3i = 0.0000001
+      //      dendrite[i].ip3i = 0.0000001
         }
 
-        soma[0].ip3i = 0.0000001
+    //    soma[0].ip3i = 0.0000001
     }
 }

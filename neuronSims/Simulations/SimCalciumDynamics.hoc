@@ -28,7 +28,7 @@ proc stimulCalcium()  { local AmplitudeOfCalcium, BasicCalciumNoise, i
     AmplitudeOfCalcium = 20 // This amplitude generates maximum Calcium responses
 
     for i = 1, $9+1 {
-        inpdata = randomCalcium.uniform(0, 1)
+        inpdata = randomCalcium.uniform(0, 1.001)
         if (Control == 1) {
             dendrite[$10] inputSt[i]  = new GapCaSt(inpdata)
             StimTrigger[i] = new NetStim(inpdata)
@@ -51,7 +51,7 @@ proc stimulCalcium()  { local AmplitudeOfCalcium, BasicCalciumNoise, i
     BasicCalciumNoise = $1
     // spontaneouse Ca entry. TotalNUmberGapJunction points of entry
     for i = 1, $9-1 {  
-        inpdata = randomCalcium.uniform(0, 1)
+        inpdata = randomCalcium.uniform(0, 1.001)
         inputSt[i].ECa = 10*$3
         inputSt[i].tau1 = $4                // ms rise time
         inputSt[i].tau2 = $5                // ms decay time

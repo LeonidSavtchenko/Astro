@@ -33,9 +33,13 @@ is a complexity that can be omitted--all shells of this mechanism
 can use the concentration of IP3 in the outermost shell of the 
 ip3cum mechanism, and discoverable by any mechanism that has a 
 USEION ip3 READ ip3i VALENCE 1
-statement in its NEURON block, and declares
-ip3i (mM)
-in its ASSIGNED block.
+
+The dynamics of the ip3 is defined by the paper 
+Glutamate-evoked Ca2+ oscillations in single astrocytes (De Pitta et al. 2009) (Manninen et al 2017)
+https://senselab.med.yale.edu/ModelDB/ShowModel.cshtml?model=223269#tabs-2
+
+modification 23/05/2018
+
 
 -------------
 SERCA channel
@@ -86,9 +90,10 @@ ENDCOMMENT
 NEURON {
     SUFFIX cadifus
     USEION ca READ cao, cai, ica WRITE cai, ica
-    USEION ip3 READ ip3i  VALENCE 1 
+    USEION ip3 READ ip3i  WRITE ip3i VALENCE 1 
     RANGE ica_pmp, cai0, fluo, fluoNew
     RANGE alpha : relative abundance of SERCA
+	RANGE Dip3, Ip3init, modelStim, v_bar_beta
     GLOBAL vrat, TBufs, TBufm, BufferAlpha
     : vrat must be GLOBAL--see INITIAL block
     : however TBufs and TBufm may be RANGE
@@ -109,11 +114,35 @@ UNITS {
 
 PARAMETER {
 
+    Dip3 = 0.1 (um2/ms)
+    Ip3init = 0.0000250 (mM)
+    Currentip3 = 0.0  (mA/cm2)
+
+
     cai0 = 50e-6 (mM)
     fluo = 0     (mM) 
     fluoNew = 0  
     DCa   = 0.22 (um2/ms) : Fink et al. 2000 0.22
     BufferAlpha = 100
+	
+	
+	modelStim = 0 (mM)
+	kappa_delta = 1.5e-3 (mM) 
+    K_3 = 1e-3 (mM)
+    K_pi = 0.6e-3 (mM) 
+    K_D = 0.7 (mM) 
+   
+    K_p = 10e-3 (mM)         
+    K_PLCdelta = 0.1e-3 (mM)
+    K_R = 1.3e-3       (mM)
+    r_bar_5P = 0.04e-3 (/ms) 
+  
+  
+    v_bar_3K = 2e-6 (mM/ms)
+    v_bar_beta = 0.2e-6  (mM/ms)
+    v_bar_delta = 0.02e-6  (mM/ms)
+	
+	
 
 : Bufs--endogenous, stationary buffer
     TBufs = 0.450 (mM) : total Bufs
@@ -181,7 +210,7 @@ ASSIGNED {
     bufs_0 (mM)
     bufm_0 (mM)
 
-    ip3i   (mM)
+  :  ip3i   (mM)
 
     L[Nannuli] (mM/ms) : 0.1e-6 mM/ms nominally, but adjusted so that
     : jchnl + jpump + jleak = 0  when  ca = 0.05 uM and h = Kinh/(ca + Kinh)
@@ -200,6 +229,7 @@ STATE {
     cabufm[Nannuli]  (mM) <1e-8>
     hc[Nannuli]
     ho[Nannuli]
+	ip3i (mM) <1e-10>
 }
 
 BREAKPOINT {
@@ -211,6 +241,7 @@ BREAKPOINT {
 LOCAL factors_done, jx
 
 INITIAL {
+	ip3i=Ip3init
     if (factors_done == 0) {  : flag becomes 1 in the first segment
         factors_done = 1       :   all subsequent segments will have
         factors()              :   vrat = 0 unless vrat is GLOBAL
@@ -276,12 +307,13 @@ PROCEDURE factors() {
     }
 }
 
-LOCAL dsq, dsqvol   : can't define local variable in KINETIC block
+LOCAL dsq, dsqvol, K_gamma, v_3K, v_delta, v_glu   : can't define local variable in KINETIC block
                     :   or use in COMPARTMENT statement
 
 KINETIC state {
     COMPARTMENT i, diam*diam*vrat[i] {ca bufs cabufs bufm cabufm sump}
     COMPARTMENT volo {cao}
+	COMPARTMENT PI*diam*diam/4 {ip3i}
     LONGITUDINAL_DIFFUSION i, DCa*diam*diam*vrat[i] {ca}
     LONGITUDINAL_DIFFUSION i, DBufm*diam*diam*vrat[i] {bufm cabufm}
 
@@ -289,13 +321,26 @@ KINETIC state {
     ~ ca[0] <-> sump  ((0.001)*parea*gamma*u(ca[0]/(1 (mM)), cath/(1 (mM))), (0.001)*parea*gamma*u(ca[0]/(1 (mM)), cath/(1 (mM))))
     ica_pmp = 2*FARADAY*(f_flux - b_flux)/parea
 
+	: dynamics of IP3 ions
+	
+	
+    
+    
+	K_gamma = K_R * (1 + (K_p / K_R) * ca[0] / (ca[0] + K_pi))
+	v_3K = v_bar_3K * ca[0]^4/(ca[0]^4 + K_D^4) * ip3i / (ip3i + K_3)
+	v_delta = v_bar_delta/(1 + ip3i/kappa_delta)* ca[0]^2 / (ca[0]^2 + K_PLCdelta^2)            
+	v_glu = v_bar_beta * modelStim^0.7 / (modelStim^0.7 + K_gamma^0.7)
+	  ~ ip3i << ((PI*diam*diam*(v_glu + v_delta - v_3K - r_bar_5P * ip3i))/2)
+	: ~ ip3i << (Currentip3*PI*diam*(1e4)/(2*FARADAY))
+	
+	
     : all currents except cell membrane ca pump
     ~ ca[0] << (-(ica - ica_pmp_last)*PI*diam/(2*FARADAY))  : ica is Ca efflux
     : radial diffusion
     FROM i=0 TO Nannuli-2 {
-	:	if (ca[i] < cai0/2) {
-	:		 ca[i] = cai0/2
-	:	}
+		if (ca[i] < cai0/2) {
+			 ca[i] = cai0/2
+		}
         ~ ca[i] <-> ca[i+1]  (DCa*frat[i+1], DCa*frat[i+1])
         ~ bufm[i] <-> bufm[i+1]  (DBufm*frat[i+1], DBufm*frat[i+1])
     }
