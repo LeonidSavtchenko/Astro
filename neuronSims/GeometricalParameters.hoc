@@ -3,6 +3,10 @@ objref hBoxGeometricalParams
 // Data vectors
 objref vecVolSphereRatio, vecSurfVolRatio, vecDistance, vecVolume, vecSurface, vectDiam, vecDendrDist
 
+
+objref f1
+f1 = new File()
+
 // Returns graph with default parameters for all plots.
 // $o1 - X data
 // $o2 - Y data
@@ -47,11 +51,15 @@ proc calculateGeometricalParams() {local i, distanceToCenter, SectionsInside, Vo
     Step = 2
     distanceToCenter = 0
     NumberOfSections = 20       // Number of Volume calculations. NumberOfSections*Step should be less than 50.
-
+  iii=0	
+  forall{
+  iii=iii+1
+   print iii
+  }
     for i = 1, NumberOfSections {
         forall {
             quadDistance = x3d(1)^2+y3d(1)^2
-            
+           
             if (quadDistance > (Radius+Step*(i-1))^2 && (quadDistance < (Radius+Step*i)^2)) {
                 SectionsInside += 1
                 Volume = PI*L*diam^2/4
@@ -91,12 +99,21 @@ proc calculateGeometricalParams() {local i, distanceToCenter, SectionsInside, Vo
     }
     print(VolumeMax)
 	VolumeMax=0
+	TotalLength=0
+	totalDiameter=0
+//	f1.wopen("filedata.txt")
     for i = 0, OriginalDendrite {
         dendrite[i] {
             vectDiam.append(diam)
+		//	TotalLength=TotalLength+L
+		//	totalDiameter=totalDiameter+diam
+		//	print i, L, diam, TotalLength, totalDiameter
+		//	f1.printf("%-6.3g %-6.3g %-6.3g %-6.3g %-6.3g", i, L, diam, TotalLength, totalDiameter)
+		//	f1.printf("\n")
             vecDendrDist.append(sqrt(x3d(1)^2+ y3d(1)^2))
         }
     }
+//	f1.close()
 }
 
 // Plots geometrical parameters and show them.

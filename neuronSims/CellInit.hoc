@@ -40,8 +40,14 @@ proc setSomaDendrCommonParams() {
             setpointer gaps[i].vgap, v(0.5)
         }
     }
-
+// LengthControl=0
+// diameterControl=0
     for i = 0, NumberDendrites-1 dendrite[i] {
+	// if (i < 132 ) {
+	// LengthControl=LengthControl+dendrite[i].L
+	
+	// print i,LengthControl, diameterControl, dendrite[i].diam
+	// }
         Ra = 100                // Ohm cm
         cm = 0.8                // uF/cm2
         nseg = 10
