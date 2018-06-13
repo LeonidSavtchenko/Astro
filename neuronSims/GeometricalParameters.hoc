@@ -54,7 +54,7 @@ proc calculateGeometricalParams() {local i, distanceToCenter, SectionsInside, Vo
   iii=0	
   forall{
   iii=iii+1
-   print iii
+  // print iii
   }
     for i = 1, NumberOfSections {
         forall {
