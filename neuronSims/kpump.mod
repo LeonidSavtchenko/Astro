@@ -1,3 +1,4 @@
+: Linear kineticks of potassium pumping. 2018 Savtchenko et al.
 TITLE kpump
 
 NEURON {

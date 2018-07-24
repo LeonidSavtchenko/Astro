@@ -1,4 +1,7 @@
 
+: CA1 pyramidal neuron to study INaP properties and repetitive firing (Uebachs et al. 2010)
+: The file was downloaded from https://senselab.med.yale.edu/ModelDB/showmodel.cshtml?model=125152
+
 UNITS {
     (mA) = (milliamp)
     (mV) = (millivolt)

@@ -1,6 +1,6 @@
 COMMENT
 Longitudinal diffusion of potassium (no buffering)
-
+Savtchenko et al., 2018
 ENDCOMMENT
 
 NEURON {

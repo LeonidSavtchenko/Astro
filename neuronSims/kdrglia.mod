@@ -5,6 +5,7 @@ TITLE kdrglia
 : uit: Traub et al.
 : A branching dendritic model of a rodent CA3
 : pyramidal neurone.
+: Mechanism was donwloaded from https://senselab.med.yale.edu/modeldb/showmodel.cshtml?model=113446&file=/neuron-2008b/kdrglia.mod#tabs-2
 
 UNITS {
     (molar) = (1/liter)

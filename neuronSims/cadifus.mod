@@ -321,15 +321,13 @@ KINETIC state {
     ~ ca[0] <-> sump  ((0.001)*parea*gamma*u(ca[0]/(1 (mM)), cath/(1 (mM))), (0.001)*parea*gamma*u(ca[0]/(1 (mM)), cath/(1 (mM))))
     ica_pmp = 2*FARADAY*(f_flux - b_flux)/parea
 
-	: dynamics of IP3 ions
-	
-	
-    
+	: dynamics of IP3 ions  
     
 	K_gamma = K_R * (1 + (K_p / K_R) * ca[0] / (ca[0] + K_pi))
 	v_3K = v_bar_3K * ca[0]^4/(ca[0]^4 + K_D^4) * ip3i / (ip3i + K_3)
 	v_delta = v_bar_delta/(1 + ip3i/kappa_delta)* ca[0]^2 / (ca[0]^2 + K_PLCdelta^2)            
-	v_glu = v_bar_beta * modelStim^0.7 / (modelStim^0.7 + K_gamma^0.7)
+	: v_glu = v_bar_beta * modelStim^0.7 / (modelStim^0.7 + K_gamma^0.7)
+	v_glu = v_bar_beta * modelStim / (modelStim + K_gamma)
 	  ~ ip3i << ((PI*diam*diam*(v_glu + v_delta - v_3K - r_bar_5P * ip3i))/2)
 	: ~ ip3i << (Currentip3*PI*diam*(1e4)/(2*FARADAY))
 	
@@ -338,12 +336,12 @@ KINETIC state {
     ~ ca[0] << (-(ica - ica_pmp_last)*PI*diam/(2*FARADAY))  : ica is Ca efflux
     : radial diffusion
     FROM i=0 TO Nannuli-2 {
-		if (ca[i] < cai0/2) {
-			 ca[i] = cai0/2
-		}
+		
         ~ ca[i] <-> ca[i+1]  (DCa*frat[i+1], DCa*frat[i+1])
         ~ bufm[i] <-> bufm[i+1]  (DBufm*frat[i+1], DBufm*frat[i+1])
+		
     }
+	
     : buffering
     dsq = diam*diam
     FROM i=0 TO Nannuli-1 {

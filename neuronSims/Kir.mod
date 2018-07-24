@@ -30,7 +30,7 @@ UNITS {
 
 PARAMETER {
     v 		(mV)
-    gkbar  = 0 :1.44e-05	(S/cm2) 	: to be fitted     	
+    gkbar  = 0 (S/cm2) :1.44e-05	 	: to be fitted     	
 
     : Boltzman steady state curve	
         vhalfl = -98.92  (mV)    		: fitted to patch data, Stegen et al. 2012

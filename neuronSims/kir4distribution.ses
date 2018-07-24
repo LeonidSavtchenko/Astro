@@ -1,8 +1,0 @@
-{load_file("nrngui.hoc")}
-objectvar save_window_, rvp_
-objectvar scene_vector_[24]
-objectvar ocbox_, ocbox_list_, scene_, scene_list_
-{ocbox_list_ = new List()  scene_list_ = new List()}
-{pwman_place(0,0,0)}
-objectvar scene_vector_[1]
-{doNotify()}

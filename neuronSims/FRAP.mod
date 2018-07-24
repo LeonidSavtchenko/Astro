@@ -1,3 +1,5 @@
+: the dynamics mechanism of the FRAP is developed by Savchenko and others. 2018
+
 NEURON {
     SUFFIX FRAP
     USEION frapion READ frapiono, frapioni WRITE frapioni VALENCE 1

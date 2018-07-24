@@ -1,3 +1,5 @@
+: Ca local fluxe. 2018, Savtchenko et al., 
+
 NEURON {
     POINT_PROCESS GapCaSt
     NONSPECIFIC_CURRENT icagap

@@ -1,5 +1,6 @@
 :NMODL for Sinusoid IClamp: 
 :Sinusoid current clamp 
+: The code was download from https://www.neuron.yale.edu/phpBB/viewtopic.php?t=1250
 
 NEURON {
     POINT_PROCESS IClampSin

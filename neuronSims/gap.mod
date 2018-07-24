@@ -1,3 +1,4 @@
+: Voltage gap junstion
 NEURON {
     POINT_PROCESS Gap
     NONSPECIFIC_CURRENT i
