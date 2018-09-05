@@ -1,3 +1,9 @@
+// This file is original file from Neuron Data base
+// https://senselab.med.yale.edu
+// Accession:97985
+//A 3-d reconstructed neuron model can be simulated in parallel on a dozen or so processors and experience almost linear speedup. Network models can be simulated when there are more processors than cells. 
+//Reference: 
+//1 . Hines ML, Markram H, Schuermann F (2008) Fully Implicit Parallel Simulation of Single Neurons J Comp Neurosci 25:439-448 [PubMed]
 {load_file("loadbal.hoc")}
 {load_file("binfo.hoc")}
 
