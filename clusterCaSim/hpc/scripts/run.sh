@@ -8,7 +8,7 @@
 #
 # Other input parameters are specified in the file "init.hoc".
 
-if [ ! $# == 2 ]; then
+if [ $# -ne 2 ]; then
     echo "Two input arguments are expected: the number of processes and the process distribution scheme."
     exit
 fi
@@ -56,17 +56,17 @@ start=$SECONDS
 echo
 echo Splitting geometry and launching simulation ...
 echo
-if [ $2 == 1 ] ; then
+if [ $2 -eq 1 ] ; then
     # Only tuxmaster works:
     mpiexec -np $1 `which nrniv` -mpi -c "numProcs=$1" init.hoc
-elif [ $2 == 2 ] ; then
+elif [ $2 -eq 2 ] ; then
     # Only slaves tuxm1 - tuxm12 work:
     mpiexec -np $1 -hostfile hostfile_IdleMaster `which nrniv` -mpi -c "numProcs=$1" init.hoc
 else
     # Master and slaves work together
     mpiexec -np $1 -hostfile hostfile_BusyMaster `which nrniv` -mpi -c "numProcs=$1" init.hoc
 fi
-if [ ! $? == 0 ] ; then
+if [ $? -ne 0 ] ; then
     exit
 fi
 

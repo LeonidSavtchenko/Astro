@@ -10,7 +10,7 @@
 #
 # Other input parameters are specified in the file "init.hoc".
 
-if [ ! $# == 4 ]; then
+if [ $# -ne 4 ]; then
     echo "Four input arguments are expected: the minimum number of processes, the maximum number of processes, the step of process grid and the process distribution scheme."
     exit
 fi
@@ -59,17 +59,17 @@ for np in `seq $1 $3 $2` ; do
     echo
     echo Splitting geometry and launching simulation ...
     echo
-    if [ $4 == 1 ] ; then
+    if [ $4 -eq 1 ] ; then
         # Only tuxmaster works:
         mpiexec -np $np `which nrniv` -mpi -c "numProcs=$np" init.hoc
-    elif [ $4 == 2 ] ; then
+    elif [ $4 -eq 2 ] ; then
         # Only slaves tuxm1 - tuxm12 work:
         mpiexec -np $np -hostfile hostfile_IdleMaster `which nrniv` -mpi -c "numProcs=$np" init.hoc
     else
         # Master and slaves work together
         mpiexec -np $np -hostfile hostfile_BusyMaster `which nrniv` -mpi -c "numProcs=$np" init.hoc
     fi
-    if [ ! $? == 0 ] ; then
+    if [ $? -ne 0 ] ; then
         exit
     fi
     
