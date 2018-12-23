@@ -79,7 +79,8 @@ proc stimul()  { local AmplitudeOfCalcium, BasicCalciumNoise, i localobj dendrit
         StimTrigger[$9+1].start = 0      //0 ms
         //StimTrigger[$9+1].number =  9000000
 		StimTrigger[$9+1].number =  1
-        StimTrigger[$9+1].noise = 1
+        //StimTrigger[$9+1].noise = 1
+		StimTrigger[$9+1].noise = 0
         forsec dendrite10.s {
             inputSt[$9+1].tau1= 1 // ms rise time
             inputSt[$9+1].tau2= 0.1  // ms decay time
@@ -90,7 +91,8 @@ proc stimul()  { local AmplitudeOfCalcium, BasicCalciumNoise, i localobj dendrit
         StimTrigger[$9].start = 0 // 0 ms
         //StimTrigger[$9].number = 9000000
 		StimTrigger[$9].number = 1
-        StimTrigger[$9].noise = 1
+        //StimTrigger[$9].noise = 1
+		StimTrigger[$9].noise = 0
         forsec dendrite11.s {
             inputSt[$9].tau1= 1 // ms rise time
             inputSt[$9].tau2= 0.1  // ms decay time
