@@ -77,8 +77,8 @@ proc stimul()  { local AmplitudeOfCalcium, BasicCalciumNoise, i localobj dendrit
         // Noise basic
         StimTrigger[$9+1].interval = NoiseInterval //ms
         StimTrigger[$9+1].start = 0      //0 ms
-        //StimTrigger[$9+1].number =  9000000
-		StimTrigger[$9+1].number =  1
+        StimTrigger[$9+1].number =  9000000
+		//StimTrigger[$9+1].number =  1
         StimTrigger[$9+1].noise = 1
         forsec dendrite10.s {
             inputSt[$9+1].tau1= 1 // ms rise time
