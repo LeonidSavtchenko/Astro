@@ -1,0 +1,19 @@
+/*Astrocyte model - Simulation scripts to compute Astrocyte dynamics from cable compartmental models implemented in NEURON simulation environment.
+
+Astrocyte works reliably on a biophysically detailed multi-compartmental 3D structure with ion channels in some or all compartments.
+
+Last updated 07-June-2017
+Developed by : Leonid Savtchenko 
+DCEE, Institute of Neurology, London, UK
+Email: leonid.savtchenko@ucl.ac.uk 
+*/
+
+load_file("ElectricalSomaDendrites.hoc")			
+load_file("AstrocyteElectric.hoc")
+			  	  
+// *******************************************************************************
+// procedure of compouation
+sma(MaxDimStalk, MinDimStalk, MaxLenStalk, MinLenStalk)
+Leaves(MaxDimLeaves, MinDimLeaves, MaxLenLeaves, MinLenLeaves)
+setdt()
+stretch(Z_coordinate, ScalingDiam)
