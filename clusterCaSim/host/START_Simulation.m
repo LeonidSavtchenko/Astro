@@ -42,7 +42,10 @@ function START_Simulation()
     
     % Loop until user inputs correct data
     while true
-        reply = input(hint, 's');
+        % MATLAB 2018a has a bug and may not show prompt passed to input() function
+        % so the prompt has to be printed separately
+        fprintf(hint);
+        reply = input('', 's');
         if strcmp(reply, '1') || strcmp(reply, '2')
             fprintf('\n');
             break
