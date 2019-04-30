@@ -55,8 +55,9 @@ for i = 0, SizeTotal-1 LargeGlia[i] {
 	    Ra = 100  // Ohm cm 
 	    cm = 0.8  // uF/cm2
 	    insert pas
-	   insert cadifus
-	   ip3i=0.000001
+		insert CAl
+	    insert cadifus
+	  //ip3i=0.000001
 	    e_pas = -85  // mV
 	    g_pas = (1+dim2/(2*length2))*(1/11150)  // mho/cm2
 	    SurfaceLeaves=SurfaceLeaves + L*3.14*diam + 2*3.14*diam*diam/4 
@@ -81,8 +82,9 @@ for i = 0, SizeTotal-1 SmallGlia[i] {
 	Ra = 100 // Ohm cm
 	cm = 0.8 
 	insert pas
+	insert CAl
 	insert cadifus
-	ip3i=0.000001
+	//ip3i=0.000001
 	e_pas = -85    // mV
 	g_pas = 1/11150  // mho/cm2
 	 surfaceStalks=surfaceStalks+length1*3.14*diam

@@ -46,9 +46,16 @@ proc astro() {
     dt = timeStep
     // print "    >>>> LABEL -- init.hoc -- astro() -- 2"
     multisplit()
-    load_file("model/CaDynamics.hoc")  
+    load_file("model/CaDynamics.hoc") 
+    load_file("model/CaWave.hoc") 
     // print "    >>>> LABEL -- init.hoc -- astro() -- 3"
     // Specify the parameter to watch
+
+	
+	
+	
+	
+	
     add_trajec(watchedSecNames, watchedSecIdxs, watchedVarNames, watchedVarCoords, numProcs)
     // print "    >>>> LABEL -- init.hoc -- astro() -- 4"
 }
@@ -113,6 +120,12 @@ proc dorun() {
     if (pc.id == 0) {
         printf("runtime = %g\n", runtime)
     }
+	
+	
+ printf("setuptime = %g\n", setuptime)
+ //if ((t > TimeDelayCaWave ) && (t < TimeDelayCaWave + DurationIP3iCalciumWave )) {
+ 
+ 
     print_trajec()
     printf("%5d time %10g %10g %10g %5g\n", pc.id, pc.step_time(), pc.vtransfer_time(1), pc.vtransfer_time(2), cplx)
     pc.runworker()

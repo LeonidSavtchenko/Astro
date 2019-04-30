@@ -14,8 +14,13 @@ soma  {
 	cm = 0.8               // uF/cm2
     nseg = 10
 	insert pas
+	insert CAl
+	//insert IP3Time
 	insert cadifus
-	ip3i=0.000001              // initial ip3 mM
+	//TimeDelayCaW
+	//DurationIP3iCalciumWave
+	DCa_cadifus=0.22   
+	            // initial ip3 mM
 	e_pas = -85            // mV 
 	g_pas = 1/11150        // mS/cm2
 	
@@ -29,14 +34,21 @@ for i = 0, NumberDendrites-1 dendrite[i]  {
 	cm = 0.8               // uF/cm2
 	nseg = 10
 	insert pas
+	insert CAl
+	//insert IP3Time
 	insert cadifus	
-	DCa_cadifus=0.30       // um2/sm
-	ip3i=0.000001             // initial ip3 mM
+	
+	DCa_cadifus=0.22       // um2/sm
+	//// initial ip3 mM
 	e_pas = -85            // mV 
 	g_pas = 1/11150        // mS/cm2
 	
   
    
+ }
+ dendrite[1]  {
+ insert reporterCa
+ period_reporterCa = reportPeriod
  }
   
  objref ProbGeometry

@@ -74,12 +74,12 @@ ca = 0.05 uM and h = Kinh/(ca + Kinh)
 ENDCOMMENT
 
 NEURON {
-  SUFFIX cadifus
-  USEION ca READ cao, cai, ica WRITE cai, ica
-  USEION ip3 READ ip3i  VALENCE 1 
-  RANGE ica_pmp, cai0, fluo, fluoNew
-  RANGE alpha : relative abundance of SERCA
-  GLOBAL vrat, TBufs, TBufm, BufferAlpha
+    SUFFIX cadifus
+    USEION ca READ cao, cai, ica WRITE cai, ica
+    USEION ip3 READ ip3i  VALENCE 1 
+    RANGE ica_pmp, cai0, fluo, fluoNew
+    RANGE alpha : relative abundance of SERCA
+    GLOBAL vrat, TBufs, TBufm, BufferAlpha
     : vrat must be GLOBAL--see INITIAL block
     : however TBufs and TBufm may be RANGE
 }
@@ -87,234 +87,238 @@ NEURON {
 DEFINE Nannuli 4
 
 UNITS {
-  (mol)   = (1)
-  (molar) = (1/liter)
-  (uM)    = (micromolar)
-  (mM)    = (millimolar)
-  (um)    = (micron)
-  (mA)    = (milliamp)
-  FARADAY = (faraday)  (10000 coulomb)
-  PI      = (pi)       (1)
+    (mol)   = (1)
+    (molar) = (1/liter)
+    (uM)    = (micromolar)
+    (mM)    = (millimolar)
+    (um)    = (micron)
+    (mA)    = (milliamp)
+    FARADAY = (faraday)  (10000 coulomb)
+    PI      = (pi)       (1)
 }
 
 PARAMETER {
- 
-  cai0 = 50e-6 (mM)
-  fluo = 0     (mM) 
-  fluoNew = 0  
-  DCa   = 0.22 (um2/ms) : Fink et al. 2000 0.22
-  BufferAlpha = 100
+    ip3i0 = 0.000001 (mM)
+    cai0 = 50e-6 (mM)
+    fluo = 0     (mM) 
+    fluoNew = 0  
+    DCa   = 0.22 (um2/ms) : Fink et al. 2000 0.22
+    BufferAlpha = 100
 
 : Bufs--endogenous, stationary buffer
-  TBufs = 0.450 (mM) : total Bufs
-  : just make kfs fast, and calculate krs as kfs*KDs
-  kfs = 1000 (/mM-ms) : try these for now
-  KDs = 10 (uM)
+    TBufs = 0.450 (mM) : total Bufs
+    : just make kfs fast, and calculate krs as kfs*KDs
+    kfs = 1000 (/mM-ms) : try these for now
+    KDs = 10 (uM)
 
 : Bufm--fura2, for bradykinin experiments
-  TBufm = 0.075 (mM) : total Bufm
-  : just make kfm fast, and calculate krm as kfm*KDm
-  kfm = 1000 (/mM-ms) : try these for now
-  KDm = 0.24 (uM)
-  DBufm = 0.050 (um2/ms)
+    TBufm = 0.075 (mM) : total Bufm
+    : just make kfm fast, and calculate krm as kfm*KDm
+    kfm = 1000 (/mM-ms) : try these for now
+    KDm = 0.24 (uM)
+    DBufm = 0.050 (um2/ms)
 
 : Bufm--calcium green, for uncaging experiments
-:  TBufm = 0.075 (mM) : total Bufm
-  : just make kfm fast, and calculate krm as kfm*KDm
-:  kfm = 1000 (/mM-ms) : try these for now
-:  KDm = 0.26 (/ms)
-:  DBufm = 0.0184 (um2/ms)
+    :  TBufm = 0.075 (mM) : total Bufm
+    : just make kfm fast, and calculate krm as kfm*KDm
+    :  kfm = 1000 (/mM-ms) : try these for now
+    :  KDm = 0.26 (/ms)
+    :  DBufm = 0.0184 (um2/ms)
 
-  : to eliminate ca pump, set gamma to 0 in hoc
-  cath = 0.2e-3 (mM) : threshold for ca pump activity
-  gamma = 8 (um/s) : ca pump flux density
+    : to eliminate ca pump, set gamma to 0 in hoc
+    cath = 0.2e-3 (mM) : threshold for ca pump activity
+    gamma = 8 (um/s) : ca pump flux density
 
-  : SERCA params
-  alpha = 1 (1) : relative abundance of SERCA mechanism as per Fig. 3
+: SERCA params
+    alpha = 1 (1) : relative abundance of SERCA mechanism as per Fig. 3
 
-  : SERCA pump
-: jpump = alpha * vmax*ca^2 / (ca^2 + Kp^2)
-: jpump is uptake from cytoplasm into SER
-  vmax = 3.75e-6 (mM/ms)
-  Kp = 0.27e-3 (mM)
+: SERCA pump
+    : jpump = alpha * vmax*ca^2 / (ca^2 + Kp^2)
+    : jpump is uptake from cytoplasm into SER
+    vmax = 3.75e-6 (mM/ms)
+    Kp = 0.27e-3 (mM)
 
-  : SERCA channel
-: jchnl is release from SER to cytoplasm
-  jmax = 3.5e-3 (mM/ms)
-  caer = 0.400 (mM)
-  Kip3 = 0.8e-3 (mM)
-  Kact = 0.3e-3 (mM)
-  kon = 2.7 (/mM-ms)
-  Kinh = 0.2e-3 (mM)
+: SERCA channel
+    : jchnl is release from SER to cytoplasm
+    jmax = 3.5e-3 (mM/ms)
+    caer = 0.400 (mM)
+    Kip3 = 0.8e-3 (mM)
+    Kact = 0.3e-3 (mM)
+    kon = 2.7 (/mM-ms)
+    Kinh = 0.2e-3 (mM)
 
-  : SERCA leak -- no fixed parameter other than caer
-  : does have an adjustable parameter L
-  
+: SERCA leak -- no fixed parameter other than caer
+: does have an adjustable parameter L
+
 }
 
 ASSIGNED {
-  diam      (um)
-  ica       (mA/cm2)
-  ica_pmp   (mA/cm2)
-  ica_pmp_last   (mA/cm2)
-  parea     (um)     : pump area per unit length
+    diam      (um)
+    ica       (mA/cm2)
+    ica_pmp   (mA/cm2)
+    ica_pmp_last   (mA/cm2)
+    parea     (um)     : pump area per unit length
 
-  sump      (mM)
+    sump      (mM)
 
-  cai       (mM)
-  cao       (mM)
-  vrat[Nannuli]  (1) : dimensionless
-                     : numeric value of vrat[i] equals the volume 
-                     : of annulus i of a 1um diameter cylinder
-                     : multiply by diam^2 to get volume per um length
+    cai       (mM)
+    cao       (mM)
+    vrat[Nannuli]  (1) : dimensionless
+                        : numeric value of vrat[i] equals the volume 
+                        : of annulus i of a 1um diameter cylinder
+                        : multiply by diam^2 to get volume per um length
 
-  bufs_0 (mM)
-  bufm_0 (mM)
+    bufs_0 (mM)
+    bufm_0 (mM)
 
-   ip3i   (mM)
+    ip3i   (mM)
 
-  L[Nannuli] (mM/ms) : 0.1e-6 mM/ms nominally, but adjusted so that
+    L[Nannuli] (mM/ms) : 0.1e-6 mM/ms nominally, but adjusted so that
     : jchnl + jpump + jleak = 0  when  ca = 0.05 uM and h = Kinh/(ca + Kinh)
 }
 
 CONSTANT { volo = 1e10 (um2) }
 
 STATE {
-  : ca[0] is equivalent to cai
-  : ca[] are very small, so specify absolute tolerance
-  : let it be ~1.5 - 2 orders of magnitude smaller than baseline level
-  ca[Nannuli]       (mM) <1e-7>
-  bufs[Nannuli]    (mM) <1e-3>
-  cabufs[Nannuli]  (mM) <1e-7>
-  bufm[Nannuli]    (mM) <1e-4>
-  cabufm[Nannuli]  (mM) <1e-8>
-  hc[Nannuli]
-  ho[Nannuli]
+    : ca[0] is equivalent to cai
+    : ca[] are very small, so specify absolute tolerance
+    : let it be ~1.5 - 2 orders of magnitude smaller than baseline level
+    ca[Nannuli]       (mM) <1e-7>
+    bufs[Nannuli]    (mM) <1e-3>
+    cabufs[Nannuli]  (mM) <1e-7>
+    bufm[Nannuli]    (mM) <1e-4>
+    cabufm[Nannuli]  (mM) <1e-8>
+    hc[Nannuli]
+    ho[Nannuli]
 }
 
 BREAKPOINT {
-  SOLVE state METHOD sparse
-  ica_pmp_last = ica_pmp
-  ica = ica_pmp
+    SOLVE state METHOD sparse
+    ica_pmp_last = ica_pmp
+    ica = ica_pmp
+    
+	  
 }
 
 LOCAL factors_done, jx
 
 INITIAL {
-   if (factors_done == 0) {  : flag becomes 1 in the first segment
-      factors_done = 1       :   all subsequent segments will have
-      factors()              :   vrat = 0 unless vrat is GLOBAL
-   }
+    if (factors_done == 0) {  : flag becomes 1 in the first segment
+        factors_done = 1       :   all subsequent segments will have
+        factors()              :   vrat = 0 unless vrat is GLOBAL
+    }
+    ip3i = ip3i0 
+    cai = cai0
 
-  cai = cai0
+    bufs_0 = KDs*TBufs/(KDs + (1000)*cai0)
+    bufm_0 = KDm*TBufm/(KDm + (1000)*cai0)
 
-  bufs_0 = KDs*TBufs/(KDs + (1000)*cai0)
-  bufm_0 = KDm*TBufm/(KDm + (1000)*cai0)
+    FROM i=0 TO Nannuli-1 {
+        ca[i] = cai
+        bufs[i] = bufs_0
+        cabufs[i] = TBufs - bufs_0
+        bufm[i] = bufm_0
+        cabufm[i] = TBufm - bufm_0
+    }
 
-  FROM i=0 TO Nannuli-1 {
-    ca[i] = cai
-    bufs[i] = bufs_0
-    cabufs[i] = TBufs - bufs_0
-    bufm[i] = bufm_0
-    cabufm[i] = TBufm - bufm_0
-  }
+    sump = cath
+    parea = PI*diam
 
-  sump = cath
-  parea = PI*diam
+    : reconsider and revise initialization comments
+    ica=0
+    ica_pmp = 0
+    ica_pmp_last = 0
+    : If there is a voltage-gated calcium current, 
+    : this is almost certainly the wrong initialization. 
+    : In such a case, first do an initialization run, then use SaveState
+    : On subsequent runs, restore the initial condition from the saved states.
 
-: reconsider and revise initialization comments
-  ica=0
-  ica_pmp = 0
-  ica_pmp_last = 0
-: If there is a voltage-gated calcium current, 
-: this is almost certainly the wrong initialization. 
-: In such a case, first do an initialization run, then use SaveState
-: On subsequent runs, restore the initial condition from the saved states.
+    FROM i=0 TO Nannuli-1 {
+        ho[i] = Kinh/(ca[i]+Kinh)
+        hc[i] = 1-ho[i]
 
-  FROM i=0 TO Nannuli-1 {
-    ho[i] = Kinh/(ca[i]+Kinh)
-    hc[i] = 1-ho[i]
-
-  : jx = jp + jc
-  : choose L so that jl = -jx
-  : jl = L*(1 - (ca[i]/caer))
-  : jp = (-vmax*ca[i]^2 / (ca[i]^2 + Kp^2))
-  : jc = jmax*(1-(ca[i]/caer)) * ( (ip3i/(ip3i+Kip3)) * (ca[i]/(ca[i]+Kact)) * ho[i] )^3
-    jx = (-vmax*ca[i]^2 / (ca[i]^2 + Kp^2))
-    jx = jx + jmax*(1-(ca[i]/caer)) * ( (ip3i/(ip3i+Kip3)) * (ca[i]/(ca[i]+Kact)) * ho[i] )^3
-    L[i] = -jx/(1 - (ca[i]/caer))
-  }
+        : jx = jp + jc
+        : choose L so that jl = -jx
+        : jl = L*(1 - (ca[i]/caer))
+        : jp = (-vmax*ca[i]^2 / (ca[i]^2 + Kp^2))
+        : jc = jmax*(1-(ca[i]/caer)) * ( (ip3i/(ip3i+Kip3)) * (ca[i]/(ca[i]+Kact)) * ho[i] )^3
+        jx = (-vmax*ca[i]^2 / (ca[i]^2 + Kp^2))
+        jx = jx + jmax*(1-(ca[i]/caer)) * ( (ip3i/(ip3i+Kip3)) * (ca[i]/(ca[i]+Kact)) * ho[i] )^3
+        L[i] = -jx/(1 - (ca[i]/caer))
+    }
 }
 
 LOCAL frat[Nannuli]  : scales the rate constants for model geometry
 
 PROCEDURE factors() {
-  LOCAL r, dr2
-  r = 1/2                : starts at edge (half diam)
-  dr2 = r/(Nannuli-1)/2  : full thickness of outermost annulus,
-                         : half thickness of all other annuli
-  vrat[0] = 0
-  frat[0] = 2*r
-  FROM i=0 TO Nannuli-2 {
-    vrat[i] = vrat[i] + PI*(r-dr2/2)*2*dr2  : interior half
-    r = r - dr2
-    frat[i+1] = 2*PI*r/(2*dr2)  : outer radius of annulus
-                                : div by distance between centers
-    r = r - dr2
-    vrat[i+1] = PI*(r+dr2/2)*2*dr2  : outer half of annulus
-  }
+    LOCAL r, dr2
+    r = 1/2                 : starts at edge (half diam)
+    dr2 = r/(Nannuli-1)/2   : full thickness of outermost annulus,
+                            : half thickness of all other annuli
+    vrat[0] = 0
+    frat[0] = 2*r
+
+    FROM i=0 TO Nannuli-2 {
+        vrat[i] = vrat[i] + PI*(r-dr2/2)*2*dr2  : interior half
+        r = r - dr2
+        frat[i+1] = 2*PI*r/(2*dr2)  : outer radius of annulus
+                                    : div by distance between centers
+        r = r - dr2
+        vrat[i+1] = PI*(r+dr2/2)*2*dr2  : outer half of annulus
+    }
 }
 
-LOCAL dsq, dsqvol  : can't define local variable in KINETIC block
-                   :   or use in COMPARTMENT statement
+LOCAL dsq, dsqvol   : can't define local variable in KINETIC block
+                    :   or use in COMPARTMENT statement
 
 KINETIC state {
-  COMPARTMENT i, diam*diam*vrat[i] {ca bufs cabufs bufm cabufm sump}
-  COMPARTMENT volo {cao}
-  LONGITUDINAL_DIFFUSION i, DCa*diam*diam*vrat[i] {ca}
-  LONGITUDINAL_DIFFUSION i, DBufm*diam*diam*vrat[i] {bufm cabufm}
+    COMPARTMENT i, diam*diam*vrat[i] {ca bufs cabufs bufm cabufm sump}
+    COMPARTMENT volo {cao}
+    LONGITUDINAL_DIFFUSION i, DCa*diam*diam*vrat[i] {ca}
+    LONGITUDINAL_DIFFUSION i, DBufm*diam*diam*vrat[i] {bufm cabufm}
 
-  : cell membrane ca pump
-  ~ ca[0] <-> sump  ((0.001)*parea*gamma*u(ca[0]/(1 (mM)), cath/(1 (mM))), (0.001)*parea*gamma*u(ca[0]/(1 (mM)), cath/(1 (mM))))
-  ica_pmp = 2*FARADAY*(f_flux - b_flux)/parea
+    : cell membrane ca pump
+    ~ ca[0] <-> sump  ((0.001)*parea*gamma*u(ca[0]/(1 (mM)), cath/(1 (mM))), (0.001)*parea*gamma*u(ca[0]/(1 (mM)), cath/(1 (mM))))
+    ica_pmp = 2*FARADAY*(f_flux - b_flux)/parea
 
-  : all currents except cell membrane ca pump
-  ~ ca[0] << (-(ica - ica_pmp_last)*PI*diam/(2*FARADAY))  : ica is Ca efflux
-  : radial diffusion
-  FROM i=0 TO Nannuli-2 {
-    ~ ca[i] <-> ca[i+1]  (DCa*frat[i+1], DCa*frat[i+1])
-    ~ bufm[i] <-> bufm[i+1]  (DBufm*frat[i+1], DBufm*frat[i+1])
-  }
-  : buffering
-  dsq = diam*diam
-  FROM i=0 TO Nannuli-1 {
-    dsqvol = dsq*vrat[i]
-    ~ ca[i] + bufs[i] <-> cabufs[i]  (kfs*dsqvol, (0.001)*KDs*kfs*dsqvol)
-    ~ ca[i] + bufm[i] <-> cabufm[i]  (kfm*dsqvol, (0.001)*KDm*kfm*dsqvol)
-  }
-  : SERCA pump, channel, and leak
-  FROM i=0 TO Nannuli-1 {
-    dsqvol = dsq*vrat[i]
-    : pump
-    ~ ca[i] << (-dsqvol*alpha*vmax*ca[i]^2 / (ca[i]^2 + Kp^2))
-    : channel
-    ~ hc[i] <-> ho[i]  (kon*Kinh, kon*ca[i])
-    ~ ca[i] << ( dsqvol*alpha*jmax*(1-(ca[i]/caer)) * ( (ip3i/(ip3i+Kip3)) * (ca[i]/(ca[i]+Kact)) * ho[i] )^3 )
-    : leak
-    ~ ca[i] << (dsqvol*alpha*L[i]*(1 - (ca[i]/caer)))
-  }
-  cai = ca[0]
-  fluo = cabufm[0]
-  fluoNew = (BufferAlpha * cabufm[0] + ca[0] - BufferAlpha*(TBufm - bufm_0) - cai0)/(BufferAlpha*(TBufm - bufm_0) + cai0)
-  
+    : all currents except cell membrane ca pump
+    ~ ca[0] << (-(ica - ica_pmp_last)*PI*diam/(2*FARADAY))  : ica is Ca efflux
+    : radial diffusion
+    FROM i=0 TO Nannuli-2 {
+	:	if (ca[i] < cai0/2) {
+	:		 ca[i] = cai0/2
+	:	}
+        ~ ca[i] <-> ca[i+1]  (DCa*frat[i+1], DCa*frat[i+1])
+        ~ bufm[i] <-> bufm[i+1]  (DBufm*frat[i+1], DBufm*frat[i+1])
+    }
+    : buffering
+    dsq = diam*diam
+    FROM i=0 TO Nannuli-1 {
+        dsqvol = dsq*vrat[i]
+        ~ ca[i] + bufs[i] <-> cabufs[i]  (kfs*dsqvol, (0.001)*KDs*kfs*dsqvol)
+        ~ ca[i] + bufm[i] <-> cabufm[i]  (kfm*dsqvol, (0.001)*KDm*kfm*dsqvol)
+    }
+    : SERCA pump, channel, and leak
+    FROM i=0 TO Nannuli-1 {
+        dsqvol = dsq*vrat[i]
+        : pump
+        ~ ca[i] << (-dsqvol*alpha*vmax*ca[i]^2 / (ca[i]^2 + Kp^2))
+        : channel
+        ~ hc[i] <-> ho[i]  (kon*Kinh, kon*ca[i])
+        ~ ca[i] << ( dsqvol*alpha*jmax*(1-(ca[i]/caer)) * ( (ip3i/(ip3i+Kip3)) * (ca[i]/(ca[i]+Kact)) * ho[i] )^3 )
+        : leak
+        ~ ca[i] << (dsqvol*alpha*L[i]*(1 - (ca[i]/caer)))
+    }
+	
+    cai = ca[0]
+    fluo = cabufm[0]
+    fluoNew = (BufferAlpha * cabufm[0] + ca[0] - BufferAlpha*(TBufm - bufm_0) - cai0)/(BufferAlpha*(TBufm - bufm_0) + cai0)
 }
 
-
-
 FUNCTION u(x, th) {
-  if (x>th) {
-    u = 1
-  } else {
-    u = 0
-  }
+    if (x>th) {
+        u = 1
+    } else {
+        u = 0
+    }
 }
