@@ -113,8 +113,8 @@ proc showGlutamateUi() {
 
     graphSEClamp = new Graph(0)
     graphList[1].append(graphSEClamp)
-    graphSEClamp.size(0,150,-0.015,-5.82077e-010)
-    graphSEClamp.view(0, -0.015, 150, 0.015, 1145, 705, 400, 200)
+    graphSEClamp.size(0,150,0.015,0.025)
+    graphSEClamp.view(0, 0.015, 150, 0.01, 1145, 705, 400, 200)
     graphSEClamp.addexpr("seClamp.i", 1, 1, 0.8, 0.9, 2)
 	graphSEClamp.yaxis(0)
     graphSEClamp.label(0.5, 0.9, "Time (ms)", 2, 1, 0, 1, 1)
